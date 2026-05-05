@@ -19,12 +19,42 @@ export default function Masthead() {
           <a href="#dashboard" style={{ cursor: "pointer" }}>Dashboard</a>
           <a href="#notices" style={{ cursor: "pointer" }}>Notices</a>
           <a href="#pricing" style={{ cursor: "pointer" }}>Pricing</a>
+          <a href="/section-8-notice" style={{ cursor: "pointer" }}>Section 8 Generator</a>
         </div>
-        <div className="mono" style={{ color: "var(--forest)", opacity: .8, letterSpacing: ".2em", fontSize: 11, fontWeight: 700 }}>
+        <div className="mono" style={{ color: "var(--forest)", opacity: .8, letterSpacing: ".2em", fontSize: "clamp(13px, 1.2vw, 14px)", fontWeight: 700 }}>
           Compliance software for UK letting agents
         </div>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <a href="/waitlist" style={{ cursor: "pointer" }}>Join waitlist →</a>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: 12 }}>
+          <a href="/login" style={{
+            cursor: "pointer",
+            padding: "8px 16px",
+            border: "1px solid var(--forest)",
+            background: "transparent",
+            color: "var(--forest)",
+            textDecoration: "none",
+            transition: "background .15s, color .15s"
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--forest)"
+            e.currentTarget.style.color = "var(--cream)"
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent"
+            e.currentTarget.style.color = "var(--forest)"
+          }}>
+            Sign in
+          </a>
+          <a href="/signup" style={{
+            cursor: "pointer",
+            padding: "8px 16px",
+            background: "var(--forest)",
+            color: "var(--cream)",
+            border: "1px solid var(--forest)",
+            textDecoration: "none",
+            boxShadow: "3px 3px 0 var(--pink)"
+          }}>
+            Get started →
+          </a>
         </div>
       </div>
 
@@ -58,7 +88,7 @@ export default function Masthead() {
         </h1>
         <hr className="hr-thin" style={{ margin: "4px 0 0" }} />
 
-        <div className="show-mobile mono" style={{ textAlign: "center", fontSize: 9.5, color: "var(--forest)", opacity: .5, letterSpacing: ".18em", marginTop: 6, fontVariantCaps: "all-small-caps" }}>
+        <div className="show-mobile mono" style={{ textAlign: "center", fontSize: "clamp(11px, 2vw, 13px)", color: "var(--forest)", opacity: .5, letterSpacing: ".18em", marginTop: 6, fontVariantCaps: "all-small-caps" }}>
           Compliance software for UK letting agents
         </div>
       </div>
@@ -74,15 +104,46 @@ export default function Masthead() {
             ["#dashboard", "Dashboard"],
             ["#notices", "Notices"],
             ["#pricing", "Pricing"],
-            ["/waitlist", "Join waitlist →"],
+            ["/section-8-notice", "Section 8 Generator"],
           ].map(([href, label]) => (
             <a key={href} href={href}
               onClick={() => setMenuOpen(false)}
               className="smallcaps"
-              style={{ fontSize: 13, color: "var(--forest)", borderBottom: "1px solid var(--rule-soft)", paddingBottom: 10 }}>
+              style={{ fontSize: 13, color: "var(--forest)", borderBottom: "1px solid var(--rule-soft)", paddingBottom: 10, textDecoration: "none" }}>
               {label}
             </a>
           ))}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 6 }}>
+            <a href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="smallcaps"
+              style={{
+                fontSize: 13,
+                padding: "12px 20px",
+                border: "1px solid var(--forest)",
+                background: "transparent",
+                color: "var(--forest)",
+                textAlign: "center",
+                textDecoration: "none"
+              }}>
+              Sign in
+            </a>
+            <a href="/signup"
+              onClick={() => setMenuOpen(false)}
+              className="smallcaps"
+              style={{
+                fontSize: 13,
+                padding: "12px 20px",
+                background: "var(--forest)",
+                color: "var(--cream)",
+                border: "1px solid var(--forest)",
+                textAlign: "center",
+                textDecoration: "none",
+                boxShadow: "3px 3px 0 var(--pink)"
+              }}>
+              Get started →
+            </a>
+          </div>
         </nav>
       )}
 

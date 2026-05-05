@@ -105,7 +105,7 @@ export default function Pricing() {
           </div>
 
           <div style={{ display: "flex", gap: 12, marginTop: 24, alignItems: "center", flexWrap: "wrap" }}>
-            <a href="/waitlist" style={{
+            <a href="/signup" style={{
               flex: 1, border: "1px solid var(--forest)",
               background: "var(--forest)", color: "var(--cream)",
               padding: "16px 24px", fontSize: 12, letterSpacing: ".18em",
@@ -113,10 +113,10 @@ export default function Pricing() {
               boxShadow: "4px 4px 0 var(--pink)", minWidth: "min(180px, 100%)",
               textDecoration: "none", display: "block", textAlign: "center"
             }} className="smallcaps">
-              Join the waitlist →
+              Get started →
             </a>
             <div style={{ fontSize: 11, color: "var(--forest)", fontStyle: "italic", maxWidth: 170, lineHeight: 1.4 }}>
-              Early access. Be first when we launch.
+              Create your account and start managing compliance.
             </div>
           </div>
         </div>

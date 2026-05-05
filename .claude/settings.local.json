@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "mcp__supabase__get_publishable_keys",
+      "mcp__supabase__list_tables"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "supabase"
+  ]
+}

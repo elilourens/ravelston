@@ -140,7 +140,7 @@ export default function Register() {
             <div style={{ fontSize: 12, color: "var(--forest-ink)" }}>{p.action}</div>
             <div style={{ textAlign: "right" }}>
               {p.action && (
-                <a href="/waitlist" className="smallcaps hairline" style={{
+                <a href="/signup" className="smallcaps hairline" style={{
                   display: "inline-block",
                   background: "var(--forest)", color: "var(--cream)",
                   padding: "7px 12px", fontSize: 10, letterSpacing: ".15em",
@@ -165,7 +165,7 @@ export default function Register() {
             {p.action && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ fontSize: 11, color: "var(--forest-ink)" }}>{p.action}</div>
-                <a href="/waitlist" className="smallcaps hairline" style={{
+                <a href="/signup" className="smallcaps hairline" style={{
                   background: "var(--forest)", color: "var(--cream)",
                   padding: "7px 12px", fontSize: 10, letterSpacing: ".15em",
                   textDecoration: "none", boxShadow: "2px 2px 0 var(--pink)",

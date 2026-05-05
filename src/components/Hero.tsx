@@ -47,12 +47,12 @@ export default function Hero() {
           </div>
 
           <div style={{ display: "flex", gap: 14, marginTop: 36, alignItems: "center", flexWrap: "wrap" }}>
-            <a href="/waitlist" className="hairline smallcaps" style={{
+            <a href="/signup" className="hairline smallcaps" style={{
               background: "var(--forest)", color: "var(--cream)",
               padding: "16px 28px", fontSize: 13, letterSpacing: ".18em",
               textDecoration: "none", boxShadow: "3px 3px 0 var(--pink)", cursor: "pointer"
             }}>
-              Join the waitlist →
+              Get started →
             </a>
             <a href="#dashboard" className="smallcaps" style={{
               padding: "16px 24px", fontSize: 13, color: "var(--forest)", letterSpacing: ".18em",

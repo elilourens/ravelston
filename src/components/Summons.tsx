@@ -23,20 +23,14 @@ export default function Summons() {
             <span style={{ position: "absolute", left: 0, right: 0, bottom: 8, height: 14, background: "var(--pink)", zIndex: -1, opacity: .85 }} />
           </span>
         </h2>
-        <p className="display ital" style={{ fontSize: "clamp(17px,2vw,22px)", maxWidth: "58ch", margin: "0 auto 16px", color: "var(--forest-ink)", lineHeight: 1.4 }}>
-          Section 21 is gone. Every missed certificate, every unserved notice, every overdue rent review is now your liability. Ravelston makes sure none of them slip.
-        </p>
-        <p className="smallcaps mono" style={{ fontSize: 14, color: "var(--emerald)", letterSpacing: ".18em", margin: "0 auto 36px", maxWidth: "58ch", textAlign: "center" }}>
-          Every draft reviewed before it sends. Every action logged. Every document court-ready.
-        </p>
-        <div style={{ display: "flex", gap: 16, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
-          <a href="/waitlist" className="smallcaps" style={{
+        <div style={{ display: "flex", gap: 16, justifyContent: "center", alignItems: "center", flexWrap: "wrap", marginTop: 36 }}>
+          <a href="/signup" className="smallcaps" style={{
             background: "var(--forest)", color: "var(--cream)",
             padding: "clamp(14px,2vw,20px) clamp(22px,3vw,36px)", fontSize: 13, letterSpacing: ".2em",
             border: "1px solid var(--forest)", cursor: "pointer",
             boxShadow: "5px 5px 0 var(--pink)", textDecoration: "none"
           }}>
-            Join the waitlist &nbsp;→
+            Get started &nbsp;→
           </a>
           <a href="#dashboard" className="smallcaps" style={{
             padding: "clamp(14px,2vw,20px) clamp(18px,2.5vw,28px)", fontSize: 13, letterSpacing: ".2em",
