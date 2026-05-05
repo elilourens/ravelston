@@ -21,8 +21,8 @@ const COMPLIANCE_COLUMNS = [
   { key: 'prsDatabase', label: 'PRS', title: 'PRS Database Registration' },
 ] as const
 
-function StatusIndicator({ item }: { item: ComplianceItem }) {
-  if (item.status === 'not-applicable' || item.status === 'required' || !item.expiryDate) {
+function StatusIndicator({ item }: { item: ComplianceItem | undefined }) {
+  if (!item || item.status === 'not-applicable' || item.status === 'required' || !item.expiryDate) {
     return (
       <div style={{ fontSize: 13, color: 'var(--forest-ink)', fontWeight: 500 }}>
         —
