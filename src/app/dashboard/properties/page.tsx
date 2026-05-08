@@ -53,6 +53,34 @@ export default function PropertiesPage() {
         buildingInsurance: { status: 'required', required: true },
         landlordInsurance: { status: 'required', required: true },
         prsDatabase: { status: 'required', required: true },
+        // Renters' Rights Act 2025 Compliance
+        rraInformationSheet: {
+          status: 'not-applicable',
+          required: false,
+          deliveryStatus: 'not-applicable',
+          deadline: '2026-05-31',
+        },
+        petRequestTracking: {
+          status: 'not-applicable',
+          required: false,
+          requests: [],
+          petsAllowed: true,
+          hasActiveRequests: false,
+        },
+        awaitingGroundsNotice: {
+          status: 'not-applicable',
+          required: false,
+          groundsDisclosed: false,
+        },
+        ombudsmanMembership: {
+          status: 'required',
+          required: true,
+        },
+        writtenStatementOfTerms: {
+          status: 'not-applicable',
+          required: false,
+          tenancyType: 'written',
+        },
       }
     }
 
