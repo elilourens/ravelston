@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Property } from './mock-data'
+import { Property, getStatusFromExpiry } from './mock-data'
 import PropertyTable from './components/PropertyTable'
 import { createClient } from '@/lib/supabase/client'
 import { fetchProperties, createProperty } from '@/lib/supabase/properties'
@@ -76,9 +76,11 @@ export default function PropertiesPage() {
   const getComplianceStatus = (property: Property) => {
     const items = Object.values(property.compliance)
     const total = items.filter(item => item.required).length
-    const compliant = items.filter(item => item.required && item.status === 'valid').length
-    const expiring = items.filter(item => item.required && item.status === 'expiring-soon').length
-    const expired = items.filter(item => item.required && (item.status === 'expired' || item.status === 'required')).length
+    // Calculate current status from expiry dates instead of using stored status
+    const getCurrentStatus = (item: any) => item.expiryDate ? getStatusFromExpiry(item.expiryDate) : item.status
+    const compliant = items.filter(item => item.required && getCurrentStatus(item) === 'valid').length
+    const expiring = items.filter(item => item.required && getCurrentStatus(item) === 'expiring-soon').length
+    const expired = items.filter(item => item.required && (getCurrentStatus(item) === 'expired' || getCurrentStatus(item) === 'required')).length
 
     if (expired > 0) return { label: 'Non-Compliant', color: 'var(--pink-ink)', bg: 'rgba(255,185,229,.2)' }
     if (expiring > 0) return { label: 'Action Needed', color: '#d97706', bg: 'rgba(217,119,6,.1)' }

@@ -57,6 +57,59 @@ export interface HMOLicense extends ComplianceItem {
   conditions?: string[]
 }
 
+// Renters' Rights Act 2025 Compliance Items
+
+export interface RRAInformationSheet extends ComplianceItem {
+  deliveryStatus: 'delivered' | 'pending' | 'not-applicable'
+  deliveryDate?: string
+  deliveryMethod?: 'email' | 'hand-delivered' | 'post' | 'portal'
+  recipientName?: string
+  deadline: string // 31 May 2026 for existing tenancies
+}
+
+export interface PetRequest {
+  id: string
+  requestDate: string
+  petType: string
+  petDetails: string
+  responseDeadline: string // 28-42 days from request
+  status: 'pending' | 'approved' | 'denied'
+  responseDate?: string
+  denialReason?: string
+  conditions?: string[]
+  daysRemaining?: number
+}
+
+export interface PetRequestTracking extends ComplianceItem {
+  requests: PetRequest[]
+  petsAllowed: boolean
+  hasActiveRequests: boolean
+}
+
+export interface AwaitingGroundsNotice extends ComplianceItem {
+  groundsDisclosed: boolean
+  disclosureDate?: string
+  disclosedGrounds?: string[] // e.g., ['Ground 1B', 'Ground 2ZA']
+  noticeProvided?: boolean
+  noticeProvidedDate?: string
+  documentUrl?: string
+}
+
+export interface OmbudsmanMembership extends ComplianceItem {
+  schemeName?: 'Property Ombudsman' | 'Property Redress Scheme' | 'Other'
+  membershipNumber?: string
+  renewalDate?: string
+  autoRenewal?: boolean
+}
+
+export interface WrittenStatementOfTerms extends ComplianceItem {
+  tenancyType: 'written' | 'verbal'
+  statementProvided?: boolean
+  provisionDate?: string
+  deadline?: string // For verbal tenancies: 31 May 2026
+  mainTerms?: string[]
+}
+
 export interface Property {
   id: string
   address: string
@@ -85,6 +138,12 @@ export interface Property {
     landlordInsurance: ComplianceItem
     prsDatabase: ComplianceItem
     hmoLicense?: HMOLicense
+    // Renters' Rights Act 2025 Compliance
+    rraInformationSheet: RRAInformationSheet
+    petRequestTracking: PetRequestTracking
+    awaitingGroundsNotice: AwaitingGroundsNotice
+    ombudsmanMembership: OmbudsmanMembership
+    writtenStatementOfTerms: WrittenStatementOfTerms
   }
 }
 
@@ -106,6 +165,22 @@ export function getStatusFromExpiry(expiryDate?: string): ComplianceStatus {
   if (days < 0) return 'expired'
   if (days <= 60) return 'expiring-soon'
   return 'valid'
+}
+
+// Helper function to calculate days remaining for pet request deadline
+export function getPetRequestDaysRemaining(responseDeadline: string): number {
+  return getDaysUntilExpiry(responseDeadline)
+}
+
+// Helper function to determine pet request urgency status
+export function getPetRequestStatus(responseDeadline: string, currentStatus: PetRequest['status']): ComplianceStatus {
+  if (currentStatus !== 'pending') return 'valid'
+
+  const daysRemaining = getPetRequestDaysRemaining(responseDeadline)
+
+  if (daysRemaining < 0) return 'expired' // Overdue response
+  if (daysRemaining <= 7) return 'expiring-soon' // Urgent
+  return 'valid' // On track
 }
 
 // Mock data with example properties
@@ -210,6 +285,64 @@ export const properties: Property[] = [
         required: true,
         notes: 'PRS Database registration opens Q3 2026',
       },
+      // RRA Compliance
+      rraInformationSheet: {
+        status: 'valid',
+        required: true,
+        deliveryStatus: 'delivered',
+        deliveryDate: '2026-04-15',
+        deliveryMethod: 'email',
+        recipientName: 'John Smith',
+        deadline: '2026-05-31',
+        notes: 'RRA Information Sheet delivered via email with read receipt',
+      },
+      petRequestTracking: {
+        status: 'valid',
+        required: true,
+        requests: [
+          {
+            id: 'pet-001',
+            requestDate: '2026-03-10',
+            petType: 'Cat',
+            petDetails: 'Indoor cat, neutered, fully vaccinated',
+            responseDeadline: '2026-04-21', // 42 days
+            status: 'approved',
+            responseDate: '2026-03-18',
+            conditions: ['Professional carpet cleaning at end of tenancy', 'Additional £200 deposit'],
+          },
+        ],
+        petsAllowed: true,
+        hasActiveRequests: false,
+      },
+      awaitingGroundsNotice: {
+        status: 'valid',
+        required: true,
+        groundsDisclosed: true,
+        disclosureDate: '2024-01-10',
+        disclosedGrounds: ['Ground 1B', 'Ground 6A'],
+        noticeProvided: true,
+        noticeProvidedDate: '2024-01-10',
+        notes: 'Awaiting grounds disclosed in tenancy agreement',
+      },
+      ombudsmanMembership: {
+        status: 'valid',
+        required: true,
+        schemeName: 'Property Ombudsman',
+        membershipNumber: 'PO-123456',
+        issueDate: '2025-04-01',
+        expiryDate: '2026-04-01',
+        renewalDate: '2026-04-01',
+        autoRenewal: true,
+        notes: 'Annual membership with auto-renewal enabled',
+      },
+      writtenStatementOfTerms: {
+        status: 'valid',
+        required: true,
+        tenancyType: 'written',
+        statementProvided: true,
+        provisionDate: '2024-01-10',
+        notes: 'Full written tenancy agreement signed by all parties',
+      },
     },
   },
   {
@@ -289,6 +422,45 @@ export const properties: Property[] = [
         status: 'required',
         required: true,
         notes: 'Registration required before next let',
+      },
+      // RRA Compliance
+      rraInformationSheet: {
+        status: 'not-applicable',
+        required: false,
+        deliveryStatus: 'not-applicable',
+        deadline: '2026-05-31',
+        notes: 'Not applicable - property currently vacant',
+      },
+      petRequestTracking: {
+        status: 'not-applicable',
+        required: false,
+        requests: [],
+        petsAllowed: true,
+        hasActiveRequests: false,
+        notes: 'No active tenancy, no pet requests',
+      },
+      awaitingGroundsNotice: {
+        status: 'not-applicable',
+        required: false,
+        groundsDisclosed: false,
+        notes: 'Will be required for next tenancy agreement',
+      },
+      ombudsmanMembership: {
+        status: 'valid',
+        required: true,
+        schemeName: 'Property Redress Scheme',
+        membershipNumber: 'PRS-789012',
+        issueDate: '2025-01-01',
+        expiryDate: '2026-01-01',
+        renewalDate: '2026-01-01',
+        autoRenewal: true,
+        notes: 'Annual membership covers all properties in portfolio',
+      },
+      writtenStatementOfTerms: {
+        status: 'not-applicable',
+        required: false,
+        tenancyType: 'written',
+        notes: 'Will be provided with new tenancy agreement',
       },
     },
   },

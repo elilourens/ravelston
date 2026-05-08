@@ -15,7 +15,6 @@ export default function PropertyDetailPage() {
   const propertyId = params.id as string
   const [property, setProperty] = useState<Property | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedTab, setSelectedTab] = useState<'overview' | 'compliance' | 'tenancy'>('compliance')
   const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [editingCert, setEditingCert] = useState<{ type: string; data: any } | null>(null)
@@ -35,6 +34,7 @@ export default function PropertyDetailPage() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [showExtractModal, setShowExtractModal] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [expandedCompliance, setExpandedCompliance] = useState<string | null>(null)
   const supabase = createClient()
 
   // Load property from Supabase
@@ -321,13 +321,97 @@ export default function PropertyDetailPage() {
     }
   }
 
+  // Compact compliance row for the right column
+  const renderComplianceRow = (
+    title: string,
+    item: ComplianceItem,
+    complianceKey: string,
+    isRRA: boolean = false
+  ) => {
+    const currentStatus = item.expiryDate ? getStatusFromExpiry(item.expiryDate) : item.status
+    const statusStyle = getStatusColor(currentStatus)
+    const daysRemaining = item.expiryDate ? getDaysUntilExpiry(item.expiryDate) : null
+
+    return (
+      <div
+        key={complianceKey}
+        onClick={() => setExpandedCompliance(complianceKey)}
+        style={{
+          background: "var(--cream)",
+          padding: "14px 16px",
+          cursor: "pointer",
+          transition: "background 0.15s",
+          borderLeft: `4px solid ${statusStyle.color}`,
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.background = "var(--cream-2)"}
+        onMouseLeave={(e) => e.currentTarget.style.background = "var(--cream)"}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <div style={{ fontSize: 14, fontWeight: 500, color: "var(--forest)" }}>
+                {title}
+              </div>
+              {isRRA && (
+                <span style={{
+                  padding: "2px 6px",
+                  background: "var(--emerald)",
+                  color: "white",
+                  fontSize: 8,
+                  fontWeight: 700,
+                  letterSpacing: ".1em",
+                  textTransform: "uppercase",
+                }}>
+                  RRA
+                </span>
+              )}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--forest-ink)" }}>
+              {item.expiryDate ? (
+                <>
+                  {daysRemaining !== null && daysRemaining < 0 ? (
+                    <span style={{ color: "var(--pink-ink)", fontWeight: 600 }}>
+                      Expired {Math.abs(daysRemaining)}d ago
+                    </span>
+                  ) : daysRemaining !== null && daysRemaining <= 60 ? (
+                    <span style={{ color: "#d97706", fontWeight: 600 }}>
+                      {daysRemaining}d remaining
+                    </span>
+                  ) : (
+                    <span>Expires {new Date(item.expiryDate).toLocaleDateString('en-GB')}</span>
+                  )}
+                </>
+              ) : (
+                <span>{currentStatus === 'required' ? 'Required' : currentStatus === 'not-applicable' ? 'N/A' : 'No expiry'}</span>
+              )}
+            </div>
+          </div>
+          <div style={{
+            padding: "4px 10px",
+            background: statusStyle.bg,
+            color: statusStyle.color,
+            fontSize: 9,
+            fontWeight: 600,
+            letterSpacing: ".1em",
+            textTransform: "uppercase",
+            whiteSpace: "nowrap",
+          }}>
+            {statusStyle.label}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const renderComplianceCard = (
     title: string,
     item: ComplianceItem,
     description: string,
     complianceKey: string
   ) => {
-    const statusStyle = getStatusColor(item.status)
+    // Calculate current status from expiry date instead of using stored status
+    const currentStatus = item.expiryDate ? getStatusFromExpiry(item.expiryDate) : item.status
+    const statusStyle = getStatusColor(currentStatus)
     const daysRemaining = item.expiryDate ? getDaysUntilExpiry(item.expiryDate) : null
 
     return (
@@ -806,234 +890,203 @@ export default function PropertyDetailPage() {
 
         <hr className="hr-thin" style={{ margin: "0 0 32px" }} />
 
-        {/* Tabs */}
+        {/* Two Column Layout */}
         <div style={{
-          display: "flex",
-          gap: 16,
-          marginBottom: 32,
-          borderBottom: "1px solid var(--forest)",
+          display: "grid",
+          gridTemplateColumns: "minmax(350px, 400px) 1fr",
+          gap: 32,
+          alignItems: "start",
         }}>
-          {(['overview', 'compliance', 'tenancy'] as const).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setSelectedTab(tab)}
-              className="smallcaps"
-              style={{
-                padding: "12px 20px",
-                background: selectedTab === tab ? "var(--forest)" : "transparent",
-                color: selectedTab === tab ? "var(--cream)" : "var(--forest)",
-                border: "none",
-                fontSize: 11,
-                letterSpacing: ".18em",
-                cursor: "pointer",
-                borderBottom: selectedTab === tab ? "none" : "1px solid transparent",
-              }}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
-        {/* Content */}
-        {selectedTab === 'compliance' && (
-          <div>
-            <div className="display" style={{ fontSize: 28, color: "var(--emerald)", marginBottom: 8 }}>
-              Compliance Tracking
-            </div>
-            <p style={{ fontSize: 14, color: "var(--forest-ink)", marginBottom: 32, lineHeight: 1.6 }}>
-              Monitor all required safety certificates, licenses, and legal compliance requirements for this property.
-              Items marked as "Expiring Soon" require renewal within 60 days.
-            </p>
-
-            <div style={{ display: "grid", gap: 24 }}>
-              {/* Gas Safety */}
-              {renderComplianceCard(
-                'Gas Safety Certificate (CP12)',
-                property.compliance.gasSafetyCertificate,
-                'Annual gas safety check by Gas Safe registered engineer. Required for all properties with gas appliances.',
-                'gasSafetyCertificate'
-              )}
-
-              {/* EICR */}
-              {renderComplianceCard(
-                'EICR (Electrical Safety)',
-                property.compliance.eicr,
-                'Electrical Installation Condition Report. Required every 5 years for all rental properties in England.',
-                'eicr'
-              )}
-
-              {/* EPC */}
-              {renderComplianceCard(
-                'EPC (Energy Performance)',
-                property.compliance.epc,
-                'Energy Performance Certificate. Must be rated E or above to legally let the property. Valid for 10 years.',
-                'epc'
-              )}
-
-              {/* Smoke Alarms */}
-              {renderComplianceCard(
-                'Smoke Alarms',
-                property.compliance.smokeAlarms,
-                'Required on every floor with living accommodation. Must be in working order at start of tenancy.',
-                'smokeAlarms'
-              )}
-
-              {/* CO Alarms */}
-              {renderComplianceCard(
-                'Carbon Monoxide Alarms',
-                property.compliance.coAlarms,
-                'Required in every room with a fixed combustion appliance (except gas cookers).',
-                'coAlarms'
-              )}
-
-              {/* Deposit Protection */}
-              {renderComplianceCard(
-                'Deposit Protection',
-                property.compliance.depositProtection,
-                'Tenant deposits must be protected in a government-approved scheme within 30 days of receipt.',
-                'depositProtection'
-              )}
-
-              {/* Right to Rent */}
-              {renderComplianceCard(
-                'Right to Rent Check',
-                property.compliance.rightToRent,
-                'Legal requirement to verify tenant has right to rent in the UK before tenancy begins.',
-                'rightToRent'
-              )}
-
-              {/* Legionella */}
-              {renderComplianceCard(
-                'Legionella Risk Assessment',
-                property.compliance.legionellaAssessment,
-                'Assessment of water systems to prevent Legionella bacteria. Required for all rental properties.',
-                'legionellaAssessment'
-              )}
-
-              {/* Building Insurance */}
-              {renderComplianceCard(
-                'Building Insurance',
-                property.compliance.buildingInsurance,
-                'Comprehensive buildings insurance to protect the property structure and fixtures.',
-                'buildingInsurance'
-              )}
-
-              {/* Landlord Insurance */}
-              {renderComplianceCard(
-                'Landlord Insurance',
-                property.compliance.landlordInsurance,
-                'Specialist landlord insurance including public liability and optional rent guarantee.',
-                'landlordInsurance'
-              )}
-
-              {/* PRS Database */}
-              {renderComplianceCard(
-                'PRS Database Registration',
-                property.compliance.prsDatabase,
-                'New requirement under Renters\' Rights Act 2025. Mandatory registration phased from late 2026.',
-                'prsDatabase'
-              )}
-
-              {/* HMO License (if applicable) */}
-              {property.type === 'hmo' && property.compliance.hmoLicense && renderComplianceCard(
-                'HMO License',
-                property.compliance.hmoLicense,
-                'Mandatory HMO licensing for properties with 5+ occupants from 2+ households.',
-                'hmoLicense'
-              )}
-            </div>
-          </div>
-        )}
-
-        {selectedTab === 'overview' && (
-          <div>
-            <div className="display" style={{ fontSize: 28, color: "var(--emerald)", marginBottom: 24 }}>
-              Property Overview
-            </div>
+          {/* LEFT COLUMN: Property Details */}
+          <div style={{ position: "sticky", top: 20 }}>
+            {/* Property Overview Card */}
             <div style={{
-              border: "1px solid var(--forest)",
+              background: "var(--forest)",
+              border: "3px solid var(--forest)",
               padding: 32,
-              background: "var(--cream-2)",
+              marginBottom: 0,
             }}>
-              <div style={{ fontSize: 14, color: "var(--forest-ink)" }}>
-                Overview information coming soon. This will include property details, photos, floor plans, and maintenance history.
+              <div style={{ fontSize: 11, fontWeight: 600, color: "var(--pink)", marginBottom: 20, textTransform: "uppercase", letterSpacing: ".15em" }}>
+                Property Details
               </div>
-            </div>
-          </div>
-        )}
-
-        {selectedTab === 'tenancy' && (
-          <div>
-            <div className="display" style={{ fontSize: 28, color: "var(--emerald)", marginBottom: 24 }}>
-              Tenancy Information
-            </div>
-            {property.currentTenancy ? (
-              <div style={{
-                border: "1px solid var(--forest)",
-                padding: 32,
-                background: "var(--cream)",
-              }}>
-                <div style={{ display: "grid", gap: 20 }}>
+              <div style={{ display: "grid", gap: 16, fontSize: 14 }}>
+                <div>
+                  <div style={{ color: "rgba(255,250,223,.6)", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>Type</div>
+                  <div style={{ color: "var(--cream)", fontWeight: 500, textTransform: "capitalize", fontSize: 18 }}>{property.type}</div>
+                </div>
+                <div>
+                  <div style={{ color: "rgba(255,250,223,.6)", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>Bedrooms</div>
+                  <div style={{ color: "var(--cream)", fontWeight: 500, fontSize: 18 }}>{property.bedrooms}</div>
+                </div>
+                {property.propertyReference && (
                   <div>
-                    <div style={{ fontSize: 11, color: "var(--forest-ink)", marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>
-                      Tenant Name
-                    </div>
-                    <div style={{ fontSize: 16, color: "var(--forest)", fontWeight: 500 }}>
-                      {property.currentTenancy.tenantName}
-                    </div>
+                    <div style={{ color: "rgba(255,250,223,.6)", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>Reference</div>
+                    <div style={{ color: "var(--cream)", fontWeight: 500, fontFamily: "monospace", fontSize: 16 }}>{property.propertyReference}</div>
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-                    <div>
-                      <div style={{ fontSize: 11, color: "var(--forest-ink)", marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>
-                        Start Date
-                      </div>
-                      <div style={{ fontSize: 14, color: "var(--forest)" }}>
-                        {new Date(property.currentTenancy.startDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 11, color: "var(--forest-ink)", marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>
-                        End Date
-                      </div>
-                      <div style={{ fontSize: 14, color: "var(--forest)" }}>
-                        {new Date(property.currentTenancy.endDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-                    <div>
-                      <div style={{ fontSize: 11, color: "var(--forest-ink)", marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>
-                        Monthly Rent
-                      </div>
-                      <div style={{ fontSize: 14, color: "var(--forest)" }}>
-                        £{property.currentTenancy.monthlyRent.toLocaleString()}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 11, color: "var(--forest-ink)", marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>
-                        Deposit Amount
-                      </div>
-                      <div style={{ fontSize: 14, color: "var(--forest)" }}>
-                        £{property.currentTenancy.depositAmount.toLocaleString()}
-                      </div>
-                    </div>
+                )}
+                <div>
+                  <div style={{ color: "rgba(255,250,223,.6)", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>Status</div>
+                  <div>
+                    <span style={{
+                      color: property.status === 'occupied' ? "var(--emerald)" : "var(--cream)",
+                      fontWeight: 600,
+                      textTransform: "capitalize",
+                      padding: "6px 12px",
+                      background: property.status === 'occupied' ? 'rgba(16,185,129,.2)' : 'rgba(255,250,223,.1)',
+                      border: `2px solid ${property.status === 'occupied' ? 'var(--emerald)' : 'var(--cream)'}`,
+                      fontSize: 13,
+                      display: "inline-block",
+                    }}>
+                      {property.status}
+                    </span>
                   </div>
                 </div>
               </div>
-            ) : (
+            </div>
+
+            {/* Divider */}
+            {property.currentTenancy && (
               <div style={{
-                border: "1px solid var(--forest)",
-                padding: 32,
-                background: "var(--cream-2)",
-                textAlign: "center",
+                height: 1,
+                background: "rgba(255,250,223,.2)",
+                margin: "32px 0",
+              }} />
+            )}
+
+            {/* Tenancy Info Section */}
+            {property.currentTenancy && (
+              <div style={{
+                background: "var(--forest)",
+                padding: "0 32px 32px 32px",
               }}>
-                <div style={{ fontSize: 14, color: "var(--forest-ink)" }}>
-                  No active tenancy
+                <div style={{ fontSize: 11, fontWeight: 600, color: "var(--pink)", marginBottom: 20, textTransform: "uppercase", letterSpacing: ".15em" }}>
+                  Current Tenancy
+                </div>
+                <div style={{ display: "grid", gap: 16, fontSize: 14 }}>
+                  <div>
+                    <div style={{ color: "rgba(255,250,223,.6)", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>Tenant</div>
+                    <div style={{ color: "var(--cream)", fontWeight: 500, fontSize: 18 }}>{property.currentTenancy.tenantName}</div>
+                  </div>
+                  <div>
+                    <div style={{ color: "rgba(255,250,223,.6)", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>Tenancy Period</div>
+                    <div style={{ color: "var(--cream)", fontSize: 13, lineHeight: 1.6 }}>
+                      {new Date(property.currentTenancy.startDate).toLocaleDateString('en-GB')} - {new Date(property.currentTenancy.endDate).toLocaleDateString('en-GB')}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ color: "rgba(255,250,223,.6)", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>Monthly Rent</div>
+                    <div className="display" style={{ color: "var(--pink)", fontWeight: 600, fontSize: 24, lineHeight: 1 }}>
+                      £{property.currentTenancy.monthlyRent.toLocaleString()}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ color: "rgba(255,250,223,.6)", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>Deposit</div>
+                    <div style={{ color: "var(--cream)", fontWeight: 500, fontSize: 16 }}>
+                      £{property.currentTenancy.depositAmount.toLocaleString()}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
           </div>
-        )}
+
+          {/* RIGHT COLUMN: Compliance Tracker */}
+          <div>
+            {/* Compliance Items List */}
+            <div style={{
+              maxHeight: "calc(100vh - 200px)",
+              overflowY: "auto",
+              paddingRight: 8,
+            }}>
+              <div style={{ display: "grid", gap: 1, background: "var(--forest)" }}>
+                {/* Core Compliance Items */}
+                {renderComplianceRow('Gas Safety Certificate (CP12)', property.compliance.gasSafetyCertificate, 'gasSafetyCertificate')}
+                {renderComplianceRow('EICR (Electrical Safety)', property.compliance.eicr, 'eicr')}
+                {renderComplianceRow('EPC (Energy Performance)', property.compliance.epc, 'epc')}
+                {renderComplianceRow('Smoke Alarms', property.compliance.smokeAlarms, 'smokeAlarms')}
+                {renderComplianceRow('CO Alarms', property.compliance.coAlarms, 'coAlarms')}
+                {renderComplianceRow('Deposit Protection', property.compliance.depositProtection, 'depositProtection')}
+                {renderComplianceRow('Right to Rent Check', property.compliance.rightToRent, 'rightToRent')}
+                {renderComplianceRow('Legionella Assessment', property.compliance.legionellaAssessment, 'legionellaAssessment')}
+                {renderComplianceRow('Building Insurance', property.compliance.buildingInsurance, 'buildingInsurance')}
+                {renderComplianceRow('Landlord Insurance', property.compliance.landlordInsurance, 'landlordInsurance')}
+                {renderComplianceRow('PRS Database Registration', property.compliance.prsDatabase, 'prsDatabase')}
+
+
+                {/* HMO License */}
+                {property.type === 'hmo' && property.compliance.hmoLicense && renderComplianceRow('HMO License', property.compliance.hmoLicense, 'hmoLicense')}
+
+                {/* RRA 2025 Items */}
+                {property.compliance.rraInformationSheet && renderComplianceRow('RRA Information Sheet', property.compliance.rraInformationSheet, 'rraInformationSheet', true)}
+                {property.compliance.petRequestTracking && renderComplianceRow('Pet Request Tracking', property.compliance.petRequestTracking, 'petRequestTracking', true)}
+                {property.compliance.awaitingGroundsNotice && renderComplianceRow('Awaiting Grounds Notice', property.compliance.awaitingGroundsNotice, 'awaitingGroundsNotice', true)}
+                {property.compliance.ombudsmanMembership && renderComplianceRow('Ombudsman Membership', property.compliance.ombudsmanMembership, 'ombudsmanMembership', true)}
+                {property.compliance.writtenStatementOfTerms && renderComplianceRow('Written Statement of Terms', property.compliance.writtenStatementOfTerms, 'writtenStatementOfTerms', true)}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal for expanded compliance view */}
+        {expandedCompliance && (() => {
+          const complianceMap: Record<string, { title: string; description: string; item: ComplianceItem }> = {
+            gasSafetyCertificate: { title: 'Gas Safety Certificate (CP12)', description: 'Annual gas safety check by Gas Safe registered engineer. Required for all properties with gas appliances.', item: property.compliance.gasSafetyCertificate },
+            eicr: { title: 'EICR (Electrical Safety)', description: 'Electrical Installation Condition Report. Required every 5 years for all rental properties in England.', item: property.compliance.eicr },
+            epc: { title: 'EPC (Energy Performance)', description: 'Energy Performance Certificate. Must be rated E or above to legally let the property. Valid for 10 years.', item: property.compliance.epc },
+            smokeAlarms: { title: 'Smoke Alarms', description: 'Required on every floor with living accommodation. Must be in working order at start of tenancy.', item: property.compliance.smokeAlarms },
+            coAlarms: { title: 'Carbon Monoxide Alarms', description: 'Required in every room with a fixed combustion appliance (except gas cookers).', item: property.compliance.coAlarms },
+            depositProtection: { title: 'Deposit Protection', description: 'Tenant deposits must be protected in a government-approved scheme within 30 days of receipt.', item: property.compliance.depositProtection },
+            rightToRent: { title: 'Right to Rent Check', description: 'Legal requirement to verify tenant has right to rent in the UK before tenancy begins.', item: property.compliance.rightToRent },
+            legionellaAssessment: { title: 'Legionella Risk Assessment', description: 'Assessment of water systems to prevent Legionella bacteria. Required for all rental properties.', item: property.compliance.legionellaAssessment },
+            buildingInsurance: { title: 'Building Insurance', description: 'Comprehensive buildings insurance to protect the property structure and fixtures.', item: property.compliance.buildingInsurance },
+            landlordInsurance: { title: 'Landlord Insurance', description: 'Specialist landlord insurance including public liability and optional rent guarantee.', item: property.compliance.landlordInsurance },
+            prsDatabase: { title: 'PRS Database Registration', description: 'New requirement under Renters\' Rights Act 2025. Mandatory registration phased from late 2026.', item: property.compliance.prsDatabase },
+            hmoLicense: property.compliance.hmoLicense ? { title: 'HMO License', description: 'Mandatory HMO licensing for properties with 5+ occupants from 2+ households.', item: property.compliance.hmoLicense } : null as any,
+            rraInformationSheet: property.compliance.rraInformationSheet ? { title: 'RRA Information Sheet', description: 'Mandatory information sheet for existing tenants. Must be provided by 31 May 2026. Fine: Up to £7,000 for non-compliance.', item: property.compliance.rraInformationSheet } : null as any,
+            petRequestTracking: property.compliance.petRequestTracking ? { title: 'Pet Request Tracking', description: 'Track tenant pet requests. Response required within 28-42 days. Landlords cannot unreasonably refuse pet requests.', item: property.compliance.petRequestTracking } : null as any,
+            awaitingGroundsNotice: property.compliance.awaitingGroundsNotice ? { title: 'Awaiting Grounds Notice', description: 'Possession grounds requiring advance notice must be disclosed before tenancy begins. Fine: Up to £7,000 for non-disclosure.', item: property.compliance.awaitingGroundsNotice } : null as any,
+            ombudsmanMembership: property.compliance.ombudsmanMembership ? { title: 'Ombudsman Membership', description: 'Membership in an approved redress scheme is mandatory for all landlords. Must be renewed annually.', item: property.compliance.ombudsmanMembership } : null as any,
+            writtenStatementOfTerms: property.compliance.writtenStatementOfTerms ? { title: 'Written Statement of Terms', description: 'For verbal tenancies: written summary of main terms must be provided by 31 May 2026.', item: property.compliance.writtenStatementOfTerms } : null as any,
+          }
+
+          const selected = complianceMap[expandedCompliance]
+          if (!selected) return null
+
+          return (
+            <div
+              onClick={() => setExpandedCompliance(null)}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "rgba(0,0,0,0.5)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1000,
+                padding: 20,
+              }}
+            >
+              <div
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  background: "var(--cream)",
+                  border: "3px solid var(--forest)",
+                  maxWidth: 700,
+                  width: "100%",
+                  maxHeight: "90vh",
+                  overflowY: "auto",
+                  boxShadow: "8px 8px 0 var(--forest)",
+                }}
+              >
+                {renderComplianceCard(selected.title, selected.item, selected.description, expandedCompliance)}
+              </div>
+            </div>
+          )
+        })()}
+
       </main>
 
       {/* Edit Property Modal */}
