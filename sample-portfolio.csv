@@ -1,0 +1,10 @@
+Property Address,Post Code,Type,Beds,Status,Ref,Tenant Name,Start Date,End Date,Monthly Rent,Deposit
+45 Baker Street,NW1 6XE,Flat,2,Occupied,BAK-045,John Smith,15/01/2024,14/01/2026,£1850,£2135
+12 Victoria Gardens,SW1V 2ED,House,3,Vacant,VIC-012,,,,,
+78 Oxford Road,OX1 2JD,Apartment,1,Occupied,OXF-078,Sarah Johnson,01/03/2025,28/02/2027,1200,1400
+33 Manchester Lane,M1 4BT,Studio,1,Under-offer,MAN-033,,,,,
+156 Cambridge Court,CB2 1AB,HMO,5,Occupied,CAM-156,Multiple Tenants,10/09/2024,09/09/2026,2850.50,3500
+22 Brighton Avenue,BN1 3XY,Terraced,2,Vacant,BRI-022,,,,,
+91 Edinburgh Crescent,EH3 5DR,Flat,3,Occupied,EDI-091,Michael Brown,20/06/2024,19/06/2026,£1,650.00,£1,900.00
+5 Leeds Street,LS2 7HY,House,4,Vacant,LEE-005,,,,,
+67 Bristol Close,BS1 6QA,Maisonette,2,Occupied,BRS-067,Emma Wilson,05/11/2025,04/11/2027,1475,1625

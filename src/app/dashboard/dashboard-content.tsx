@@ -627,22 +627,40 @@ export default function DashboardContent({ userEmail, userId, userCreatedAt }: D
                       Access your full portfolio, add new properties, and manage details
                     </p>
                   </div>
-                  <Link
-                    href="/dashboard/properties"
-                    className="smallcaps"
-                    style={{
-                      padding: "12px 20px",
-                      background: "var(--forest)",
-                      color: "var(--cream)",
-                      fontSize: 11,
-                      letterSpacing: ".18em",
-                      boxShadow: "4px 4px 0 var(--emerald)",
-                      textDecoration: "none",
-                      display: "inline-block",
-                    }}
-                  >
-                    View All Properties →
-                  </Link>
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <Link
+                      href="/dashboard/properties/import"
+                      className="smallcaps"
+                      style={{
+                        padding: "12px 20px",
+                        background: "transparent",
+                        border: "1px solid var(--forest)",
+                        color: "var(--forest)",
+                        fontSize: 11,
+                        letterSpacing: ".18em",
+                        textDecoration: "none",
+                        display: "inline-block",
+                      }}
+                    >
+                      Import Portfolio
+                    </Link>
+                    <Link
+                      href="/dashboard/properties"
+                      className="smallcaps"
+                      style={{
+                        padding: "12px 20px",
+                        background: "var(--forest)",
+                        color: "var(--cream)",
+                        fontSize: 11,
+                        letterSpacing: ".18em",
+                        boxShadow: "4px 4px 0 var(--emerald)",
+                        textDecoration: "none",
+                        display: "inline-block",
+                      }}
+                    >
+                      View All Properties →
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Quick Stats */}

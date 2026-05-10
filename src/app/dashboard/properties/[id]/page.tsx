@@ -928,12 +928,12 @@ export default function PropertyDetailPage() {
                   <div style={{ color: "rgba(255,250,223,.6)", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".1em" }}>Status</div>
                   <div>
                     <span style={{
-                      color: property.status === 'occupied' ? "var(--emerald)" : "var(--cream)",
+                      color: property.status === 'occupied' ? "var(--forest)" : property.status === 'vacant' ? "var(--cream)" : "var(--pink)",
                       fontWeight: 600,
                       textTransform: "capitalize",
                       padding: "6px 12px",
-                      background: property.status === 'occupied' ? 'rgba(16,185,129,.2)' : 'rgba(255,250,223,.1)',
-                      border: `2px solid ${property.status === 'occupied' ? 'var(--emerald)' : 'var(--cream)'}`,
+                      background: property.status === 'occupied' ? 'var(--cream)' : property.status === 'vacant' ? 'rgba(255,250,223,.15)' : 'rgba(255,185,229,.3)',
+                      border: `2px solid ${property.status === 'occupied' ? 'var(--cream)' : property.status === 'vacant' ? 'var(--cream)' : 'var(--pink)'}`,
                       fontSize: 13,
                       display: "inline-block",
                     }}>
@@ -944,20 +944,13 @@ export default function PropertyDetailPage() {
               </div>
             </div>
 
-            {/* Divider */}
-            {property.currentTenancy && (
-              <div style={{
-                height: 1,
-                background: "rgba(255,250,223,.2)",
-                margin: "32px 0",
-              }} />
-            )}
-
             {/* Tenancy Info Section */}
             {property.currentTenancy && (
               <div style={{
                 background: "var(--forest)",
-                padding: "0 32px 32px 32px",
+                padding: "32px",
+                marginTop: 16,
+                border: "3px solid var(--forest)",
               }}>
                 <div style={{ fontSize: 11, fontWeight: 600, color: "var(--pink)", marginBottom: 20, textTransform: "uppercase", letterSpacing: ".15em" }}>
                   Current Tenancy
@@ -993,11 +986,15 @@ export default function PropertyDetailPage() {
           {/* RIGHT COLUMN: Compliance Tracker */}
           <div>
             {/* Compliance Items List */}
-            <div style={{
-              maxHeight: "calc(100vh - 200px)",
-              overflowY: "auto",
-              paddingRight: 8,
-            }}>
+            <div
+              className="hide-scrollbar"
+              style={{
+                maxHeight: "calc(100vh - 200px)",
+                overflowY: "auto",
+                border: "2px solid var(--forest)",
+                background: "var(--cream-2)",
+                boxShadow: "4px 4px 0 var(--emerald)",
+              }}>
               <div style={{ display: "grid", gap: 1, background: "var(--forest)" }}>
                 {/* Core Compliance Items */}
                 {renderComplianceRow('Gas Safety Certificate (CP12)', property.compliance.gasSafetyCertificate, 'gasSafetyCertificate')}
@@ -1023,6 +1020,17 @@ export default function PropertyDetailPage() {
                 {property.compliance.ombudsmanMembership && renderComplianceRow('Ombudsman Membership', property.compliance.ombudsmanMembership, 'ombudsmanMembership', true)}
                 {property.compliance.writtenStatementOfTerms && renderComplianceRow('Written Statement of Terms', property.compliance.writtenStatementOfTerms, 'writtenStatementOfTerms', true)}
               </div>
+            </div>
+            {/* Scroll hint */}
+            <div style={{
+              textAlign: "center",
+              padding: "12px 0",
+              color: "var(--forest-ink)",
+              fontSize: 11,
+              letterSpacing: ".1em",
+              opacity: 0.6,
+            }}>
+              <span className="smallcaps">↓ Scroll for more ↓</span>
             </div>
           </div>
         </div>

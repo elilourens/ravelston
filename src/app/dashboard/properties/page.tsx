@@ -156,22 +156,41 @@ export default function PropertiesPage() {
           <div className="display ital" style={{ fontSize: "clamp(40px,5vw,64px)", lineHeight: 1, color: "var(--emerald)" }}>
             Properties.
           </div>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="smallcaps"
-            style={{
-              padding: "10px 18px",
-              background: "var(--forest)",
-              color: "var(--cream)",
-              fontSize: 11,
-              letterSpacing: ".18em",
-              boxShadow: "3px 3px 0 var(--emerald)",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            + Add Property
-          </button>
+          <div style={{ display: "flex", gap: 12 }}>
+            <Link
+              href="/dashboard/properties/import"
+              className="smallcaps"
+              style={{
+                padding: "10px 18px",
+                background: "transparent",
+                border: "1px solid var(--forest)",
+                color: "var(--forest)",
+                fontSize: 11,
+                letterSpacing: ".18em",
+                cursor: "pointer",
+                textDecoration: "none",
+                display: "inline-block",
+              }}
+            >
+              Import Portfolio
+            </Link>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="smallcaps"
+              style={{
+                padding: "10px 18px",
+                background: "var(--forest)",
+                color: "var(--cream)",
+                fontSize: 11,
+                letterSpacing: ".18em",
+                boxShadow: "3px 3px 0 var(--emerald)",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              + Add Property
+            </button>
+          </div>
         </div>
         <hr className="hr-thin" style={{ margin: "0 0 32px" }} />
 
