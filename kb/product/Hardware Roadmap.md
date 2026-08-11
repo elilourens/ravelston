@@ -40,7 +40,25 @@ Work: firmware with sample counters + synced clocks, battery, 3D-printed bar-end
 
 **Gate:** a stranger can use it for a full session without help.
 
-## Stage 3 — Design for manufacture (first real EE spend)
+## Stage 3a — Ship the module (no-EE path)
+
+If the Stage 1 board (e.g. a XIAO-class module) proved good enough, it can go
+straight into the sellable product — dev modules like the XIAO are explicitly
+sold for embedding and available in volume trays. Manufacturing becomes
+assembly: buy modules, flash firmware, solder battery, case it up. Doable
+solo or via a small assembly house.
+
+- **Pros:** no contract EE, no custom PCB, radio stays pre-certified so
+  end-product testing is the cheap tier.
+- **Cons:** ~$32 of module per product vs ~$8–10 custom BOM; locked to the
+  module's onboard IMU; supply/revision risk if the vendor changes the board.
+
+Viable up to roughly 1–2k units. Beyond that, 3b pays for itself.
+
+**Gate:** a first batch (tens of units) assembled from modules works as well
+as the hand-built prototypes.
+
+## Stage 3b — Custom PCB (cost reduction, once demand is proven)
 
 - Contract EE designs a custom PCB: pre-certified BLE **module** (keeps radio cert cheap) + IMU chip (e.g. ICM-42688 / BMI270 class) + charging.
 - Injection-mould-ready enclosure design (or high-quality printed for a first batch).
@@ -69,8 +87,9 @@ Needed before selling, not before:
 | 0 | ~$100 (done — sensors ordered) |
 | 1 | ~$50–100 |
 | 2 | time, mostly |
-| 3 | $5–20k (EE contract + pilot batch) |
+| 3a | ~$1–3k (modules + enclosures for a first batch) |
+| 3b | $5–20k (EE contract + pilot batch) |
 | 4 | $10–20k |
 | 5 | $20k+ (tooling + first run) |
 
-Stages 0–2 are affordable solo. Stage 3 onward is where funding/pre-orders/grants enter the picture — which is also roughly where the [`marketing-site/`](../../marketing-site/) starts mattering.
+Stages 0–2 are affordable solo, and 3a keeps even the first sellable batch in reach. Stage 3b onward is where funding/pre-orders/grants enter the picture — which is also roughly where the [`marketing-site/`](../../marketing-site/) starts mattering.
