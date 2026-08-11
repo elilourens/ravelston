@@ -1,0 +1,7 @@
+# Obsidian per-machine state — noisy, not worth versioning
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/workspaces.json
+.obsidian/cache
+.obsidian/graph.json
+.trash/
