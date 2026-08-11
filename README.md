@@ -14,6 +14,7 @@ A gym performance tracker built around two sensors that mount on either side of 
 | [`marketing-site/`](marketing-site/) | Public-facing marketing website |
 | [`app/`](app/) | The companion app |
 | [`research/`](research/) | Sensor research, signal processing, and experiments |
+| [`sensors/`](sensors/) | Host-side sensor code — BLE acquisition now, custom firmware later |
 | [`kb/`](kb/) | Knowledge base — shared reference docs and notes |
 | [`scratch/`](scratch/) | Throwaway prototypes and one-off explorations |
 | [`setup/`](setup/) | Environment and tooling setup |
