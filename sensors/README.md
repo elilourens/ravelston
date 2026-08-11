@@ -25,6 +25,6 @@ counters, so logging must be gap-aware.
 
 ## Layout
 
-- `daq/` — data acquisition: BLE client, protocol parser, loggers *(to build)*
+- `daq/` — data acquisition: BLE protocol parser + dual-sensor logger, with synthetic-packet tests (see `daq/README.md`)
 - `firmware/` — reserved for custom hardware later (e.g. ESP32 + IMU); empty
   while we're on WitMotion units
