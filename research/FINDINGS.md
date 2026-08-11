@@ -3,7 +3,7 @@
 Can two bar-end IMUs (WitMotion WT9011DCL-BT50) measure how much weight is
 loaded on a barbell — and what else does the dual-sensor geometry buy?
 
-Sources: five waves of literature/market/patent/hardware research, plus
+Sources: six waves of literature/market/patent/hardware research, plus
 eight simulation experiments in this repo (`run_all`, `run_dual`,
 `run_combo`, `run_mitigation`, `run_barlib`, `run_velocity`, `run_plates`,
 `run_family`; raw numbers in the matching `results_*.md`).
@@ -11,8 +11,8 @@ eight simulation experiments in this repo (`run_all`, `run_dual`,
 Research brief with citations (rounds 1–2 only; this file supersedes it):
 https://claude.ai/code/artifact/cfe73a9e-6312-4f67-b8ee-b6d1dcb7bfd6
 
-Status: research phase complete, hardware pending. Last updated after the
-bar-geometry census and the self-calibration result.
+Status: research phase complete, hardware pending. Last updated 2026-08-11
+after the lift-recognition research wave (§13, Appendix B).
 
 ---
 
@@ -529,6 +529,226 @@ scrapers); Chiu 2010 Table 4 (per-bar stiffness, paywalled).
 
 ---
 
+## 13. Lift recognition: auto-detecting which exercise is being performed
+
+*(Added 2026-08-11, sixth research wave: seven parallel literature/market/
+patent sweeps, 127 unique source documents (~115 distinct works); full
+source list in Appendix B.)*
+
+Question: can the two bar-end IMUs tell **which lift** is being performed
+(squat vs bench vs deadlift vs press vs row vs Olympic lifts), so the app
+can auto-log without the user selecting an exercise?
+
+**Answer: yes, and it is far more tractable than the weight-estimation
+problem.** Exercise-type recognition from a single 6-axis IMU is
+solved-in-the-lab at the class counts we need; nobody has shipped it from
+a bar-mounted sensor; and the bar's own physics hands us most of the
+classifier for free. The catch is the same one the whole HAR literature
+trips over: the hard part in the wild is not telling squat from bench, it
+is telling *exercise* from *everything else* (re-racking, plate loading,
+walking the bar out).
+
+### 13.1 Competitive state: the feature does not exist on the bar
+
+- **No bar-mounted product does cold-start exercise classification.** The
+  closest is GymAware FLEX's "Exercise Assist," which *learns each
+  athlete's* pattern per exercise and then flags mismatches — a per-user
+  warning system, not recognition. Enode/Vmaxpro, PUSH, Beast, RepOne,
+  Vitruve, Bar Sensei, Output: all require manual exercise selection; the
+  2026 VBT buyers' guides barely mention auto-detection.
+- **Wrist wearables do it and users hate the results.** Garmin's native
+  exercise guessing is the most-complained-about feature in its strength
+  mode (shoulder press logged as pull-ups; TechRadar: "improve or scrap
+  it"). Apple Watch still has no native rep/exercise detection in 2026 —
+  third-party apps score ~3/5, "not reliable enough to replace intentional
+  logging." Whoop only detects that "weightlifting happened." Atlas
+  Wearables built a 70-exercise wrist classifier a decade ago — reviews
+  said "sometimes magic," misidentified freestyle work, and the company
+  folded.
+- The one peer-reviewed wrist system on the big three (StrengthControl,
+  Apple Watch): 88.4% overall, but squat only 76.5% — at the wrist, a
+  squat is easily confused with other hip hinges. **The bar sees exactly
+  what the wrist cannot**: the implement's own path, which is the thing
+  that differs between lifts.
+- Platform APIs won't commoditise this soon: neither Apple's nor Google's
+  health SDKs expose barbell exercise classification or rep primitives.
+
+### 13.2 What the literature establishes (body-worn, transfers with caveats)
+
+- **Accuracy at our class counts is high.** RecoFit (CHI 2014, 114–200
+  users, arm-worn): 99/98/96% on 4/7/13 exercise classes, user-independent.
+  O'Reilly (82 subjects): 98% on 5 barbell/lower-limb exercises from ONE
+  shank IMU. A 2025 study classified exactly our five target lifts
+  (squat/bench/deadlift/OHP/row) from a single 6-axis sensor at >90%.
+  Fifty-class problems drop to ~92% (CNN); beyond ~30 fine-grained classes
+  a lone IMU saturates.
+- **The canonical architecture is three stages**: (1) segment exercise vs
+  non-exercise (periodicity/autocorrelation is the strongest cue),
+  (2) classify the segmented set, (3) count reps. Segment-then-classify
+  beats sliding-window classification on continuous gym sessions.
+- **The null class is the real problem.** In-the-wild, ~95% of samples are
+  non-exercise; naive models collapse (F1 ≈ 0.5). MyoGym is 77% NULL.
+  Published accuracies mostly assume manual segmentation — treat every
+  reported number as an upper bound. What works: an explicitly *trained*
+  null class (plate loading, re-racking, walking), temporal smoothing as
+  postprocessing, and confidence thresholding / open-set rejection.
+  A bar sensor shrinks this problem structurally: **bar not moving = null**
+  covers most of a gym session, and nobody curls the bar rack.
+- **Expect a 5–15 pp drop from subject-dependent to subject-independent**
+  (e.g. 98.3% → 89.0% real-time on new users). Evaluate leave-one-subject-
+  out from day one. Exercise-*type* recognition is fairly user-independent
+  (inter-exercise variance > inter-subject variance); technique/form
+  scoring is strongly user-dependent and needs personalisation — keep the
+  two problems separate.
+- **Sensor rate/axes are a non-issue**: reviews find accelerometer-only at
+  20 Hz suffices for classification. Our 2×100 Hz is sized for the whip
+  band, and recognition rides along free.
+- **No academic precedent for dual bar-end recognition.** The nearest
+  published analogs are a dumbbell-mounted IMU in a fusion study (86–91%)
+  and ERICA (SenSys 2020, IMU on the dumbbell). The differential signal
+  (end-to-end tilt, anti-phase transverse motion) is unexplored for
+  classification — same unclaimed-territory pattern as the whip result.
+
+### 13.3 The bar's physics does most of the classifying
+
+From the bar-path/VBT biomechanics literature, the discriminative structure
+available at the bar, roughly in order of power:
+
+1. **Start condition.** Conventional deadlift is the only major lift that
+   begins from a true dead stop at floor height: quiet gravity-only
+   window → concentric-first rep → floor-impact spike between reps.
+   Everything racked (squat/bench/press) begins with an unrack transient,
+   a settle, and an eccentric-first rep. RDL: eccentric-first from
+   standing, *no* floor impacts. This single feature family nearly
+   partitions the catalogue.
+2. **Walkout signature.** Squats add 2–4 steps of low-amplitude horizontal
+   jitter and bar yaw between unrack and first rep; bench has none
+   (J-hooks to first rep directly). The two bar-end sensors see walkout
+   yaw as **anti-phase transverse acceleration** — a dual-IMU-exclusive
+   feature.
+3. **Vertical ROM and absolute bar height.** Squat descent path ≈ 1.25 m;
+   deadlift floor-to-lockout only; OHP goes *above* standing shoulder
+   height; sumo pulls 20–40% shorter than conventional; snatch peak height
+   0.89–1.17 m plus a 0.13–0.17 m catch drop.
+4. **Path shape.** Bench has a sustained toward-the-head horizontal
+   acceleration component (the J-curve) absent in squat/deadlift;
+   Olympic lifts trace a multi-inflection horizontal S-loop plus catch
+   drop that is unmistakable at 100 Hz.
+5. **Velocity envelope + tempo.** Deadlift is the slowest of the big
+   three at limit loads (MPV ~0.15 m/s at 1RM vs squat ~0.25); Olympic
+   lifts are categorically faster (snatch peak 1.65–2.28 m/s). Caveat:
+   squat and bench MPV at matched %1RM nearly overlap — velocity alone
+   cannot separate them; it needs features 1–4.
+6. **Dip counting for the overhead family.** Strict press: no dip; push
+   press: one pre-drive dip; push jerk: dip + re-dip. Their kinetics are
+   otherwise identical — the dip count *is* the discriminator.
+7. **Roll and tilt.** End-to-end vertical-velocity difference measures
+   lateral bar tilt (bench shows more independent-hand tilt than
+   back-coupled squat). Caveat from the sleeve-coupling finding in §2:
+   sensors on the sleeves see bearing spin — roll-axis gyro is partly
+   decoupled from lift mechanics and spikes at snatch/clean turnover.
+   Treat roll as an event detector, not a continuous feature.
+
+**Hard pairs** (bar motion alone genuinely underdetermines): front vs back
+squat (~5–10 cm start-height difference is the main lever), flat vs
+incline bench (MPV differs by 0.02–0.05 m/s — near-indistinguishable),
+high- vs low-bar squat, RDL vs stiff-leg vs good morning. Product answer:
+classify to the group, let the user disambiguate once, remember their
+default (which is also exactly GymAware's per-user trick, applied only
+where physics runs out).
+
+### 13.4 Recommended recognition architecture
+
+1. **Stage 0 — activity gating**: bar stationary (rack/floor) = null.
+   Free, robust, bar-exclusive.
+2. **Stage 1 — set segmentation**: autocorrelation-based periodicity
+   detection, exercise-period precision/recall >95% is the published bar.
+3. **Stage 2 — classification**: start with windowed statistical +
+   frequency features (means, RMS, energy, dominant frequency, axis
+   correlations, autocorrelation period) + event features from §13.3
+   (start condition, floor impacts, dip count, ROM, walkout) into a
+   random forest / gradient boosting. This class of pipeline is what hit
+   96–99% in RecoFit and >90% on our exact five lifts. Add MiniRocket as
+   the second iteration — near-SOTA on small data, and it has been run on
+   a Cortex-M in 7 kB flash / 3 kB RAM at <15 µW, i.e. it fits the
+   Stage-1-hardware nRF52840 with room to spare. Deep models (1D-CNN,
+   InceptionTime) only after thousands of labelled sets; on 20-subject
+   LOSO benchmarks classical features matched CNNs anyway.
+4. **Stage 3 — rep counting**: autocorrelation period + peak detection
+   with period-based rejection (±1 rep in 93% of sets, RecoFit), plus
+   zero-velocity updates between reps — the bar is stationary at lockout/
+   floor, a drift reset body-worn sensors don't get.
+5. **Orientation robustness**: mount rotation is arbitrary → use
+   magnitudes, the gravity-aligned vertical axis, and differential-
+   quaternion features (random orientation costs ~32 pp raw; Earth-frame
+   features recover to within ~5 pp).
+6. **Confidence honesty**: classify to group when the posterior is flat
+   (front/back squat), ask once, personalise thereafter.
+
+### 13.5 Data situation and plan
+
+- **No public bar-mounted dataset exists.** Every public corpus is
+  body-worn. This is a moat *and* a cost: we must collect our own, but so
+  must anyone else, and we'll have the only labelled bar-end corpus.
+- Pretraining/prototyping corpora (wrong placement, right dynamics):
+  RecoFit (200+ participants, forearm — repo archived June 2026,
+  **download it now**), MyoGym (30 exercises + NULL, via Oulu authors),
+  MM-Fit (multimodal, Zenodo), RecGym (50 h in-gym incl. NULL,
+  CC-BY-4.0 — commercial-friendly), Ebbelaar's tracking-barbell-exercises
+  (exactly our five lifts at the wrist; best label match; code + data
+  open). **Licence watch**: WEAR is CC BY-NC-SA — not usable commercially;
+  IEEE DataPort items are often paywalled.
+- Label-cheap routes when we do collect: template/DTW methods reach 95%
+  with ONE recorded example per exercise (ExerSense) — a plausible v0
+  that ships before any big corpus exists; self-supervised pretraining on
+  our own unlabelled gym recordings (LIMU-BERT-style), or fine-tuning the
+  open-weights UK-Biobank accelerometer ResNet (+24 pp median F1 on small
+  datasets).
+- Rough scale expectations from the literature: 10–20 subjects × a few
+  sets per lift ≈ 90%+ LOSO on 5–15 classes; ~100–200 people is what
+  pushed RecoFit to 96–99%.
+- **Every Stage-0 whip session doubles as a recognition session**: the
+  §10 bench-test protocol already has us logging squats/bench/deadlifts
+  at varying loads — label them and the classifier corpus starts free.
+
+### 13.6 Patent landscape (rough non-lawyer read)
+
+- **Wrist/body-worn classification is crowded; bar-mounted is not.** Every
+  bar-mounted-sensor filing found is abandoned (Smart Barbell
+  US20170128765A1; iLift smart collar US20170266490A1), expired (rack
+  free-weight monitor US7455621B1), or ceased (Peloton WO2024064703A1,
+  camera-based anyway).
+- **The one real FTO watch item: Microsoft US9174084B2** (the RecoFit
+  patent, active to ~2033): a *wearable* apparatus that auto-segments and
+  classifies exercise from accelerometer + ML. A bar-mounted sensor is
+  arguably not "wearable" — plausible design-around, but this deserves a
+  proper claim-construction read (plus its EP family) before launch.
+  Secondary: Bosch US8500604B2, US11794074B2, GestureLogic US10575760B2 —
+  all explicitly body-worn.
+- **VBT incumbents hold no relevant IP found** (GymAware, Beast, Vmaxpro,
+  PUSH/WHOOP — WHOOP's filings are physiological, Atlas's are design-only).
+- **Cuts both ways**: abundant 2014–2025 prior art (RecoFit paper+dataset,
+  >90% barbell-classification papers) means broad claims on "classify lift
+  from bar IMU" are probably ungettable for anyone — good FTO, weak
+  offensive IP. The patentable angle remains the **dual-IMU whip/
+  deflection methods** (§2–§7), where nothing was found.
+- Caveats: Google Patents front pages only; no claim charts; applications
+  <18 months old are invisible; non-US not systematically checked.
+
+### 13.7 Open questions specific to us
+
+1. Does sleeve bearing spin corrupt more than the roll axis in practice
+   (it rides on the same mount as the whip measurement)?
+2. How much does the dual-end differential signal actually add over one
+   sensor for classification (unexplored in any literature)?
+3. Dumbbell mode: everything above is barbell-path reasoning; dumbbell
+   exercises reintroduce the wrist-like ambiguity problem.
+4. Warm-up vs working set boundaries (the top real-world complaint about
+   every shipping auto-logger) — velocity + load context may make this
+   tractable for us where it isn't at the wrist.
+
+---
+
 ## Appendix: next actions
 
 1. **Email jgl5306@psu.edu and dar119@psu.edu** for the ASA-190
@@ -543,3 +763,160 @@ scrapers); Chiu 2010 Table 4 (per-bar stiffness, paywalled).
    the velocity route; in-hands mid-rep is out of scope for v1.
 6. Build the velocity pipeline in parallel regardless — §6 shows it is a
    defensible product on its own, and it is the fallback load estimator.
+
+---
+
+## Appendix B: lift-recognition sources (research wave 6)
+
+127 unique source documents consulted across the seven sweeps of research
+wave 6 (a handful are the same work at a second host or the code/data
+companion of a paper; ~115 distinct works). Grouped by theme.
+
+### Exercise recognition — core academic (25)
+
+1. RecoFit: find, recognize, count repetitive exercises (CHI 2014) — https://www.microsoft.com/en-us/research/publication/recofit-using-wearable-sensor-find-recognize-count-repetitive-exercises/
+2. RecoFit paper, ACM DL version consulted separately — https://dl.acm.org/doi/10.1145/2556288.2557116
+3. MyoGym open gym dataset (ISWC 2017) — https://dl.acm.org/doi/10.1145/3123024.3124400
+4. Tracking Free-Weight Exercises (UbiComp 2007) — https://link.springer.com/chapter/10.1007/978-3-540-74853-3_2
+5. Um et al., CNN on 50 gym exercises (arXiv 1610.07031) — https://arxiv.org/abs/1610.07031
+6. Seven Things to Know about Exercise Classification (IEEE JBHI 2024) — https://pmc.ncbi.nlm.nih.gov/articles/PMC11284806/
+7. Sensor-Based Gym Exercise Recognition, 42 classes chest accel (Sensors 2022) — https://pmc.ncbi.nlm.nih.gov/articles/PMC9002367/ (MDPI: https://www.mdpi.com/1424-8220/22/7/2489)
+8. Gym recognition with data fusion incl. dumbbell IMU (ICBBS 2021) — https://dl.acm.org/doi/fullHtml/10.1145/3469678.3469705
+9. Soro et al., CrossFit recognition + rep counting CNN (Sensors 2019) — https://www.mdpi.com/1424-8220/19/3/714 (PMC: https://pmc.ncbi.nlm.nih.gov/articles/PMC6387025/)
+10. MiLift smartwatch workout tracking (IEEE TMC 2017) — https://ieeexplore.ieee.org/document/8118128/
+11. O'Reilly et al., lower-limb exercise detection, one shank IMU (JSCR 2017) — https://www.ovid.com/jnls/nsca-jscr/pdf/10.1519/jsc.0000000000001852~technology-in-strength-and-conditioning-tracking-lower-limb
+12. Wearable inertial systems for lower-limb exercise: systematic review (Sports Med 2018) — https://link.springer.com/article/10.1007/s40279-018-0878-4
+13. IMU classification of resistive exercise on the ISS (PLoS ONE 2023) — https://pmc.ncbi.nlm.nih.gov/articles/PMC10414632/
+14. Automatic squat-posture classification (Sensors 2020) — https://pubmed.ncbi.nlm.nih.gov/31936407/
+15. Subject-independent deadlift technique errors (Smart Health 2026) — https://www.sciencedirect.com/science/article/abs/pii/S2352648326000243
+16. Formulift thigh-IMU biofeedback evaluation (JMIR mHealth 2018) — https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5812980/
+17. NULL-class impact on in-the-wild HAR (Sensors 2024) — https://www.mdpi.com/1424-8220/24/12/3898 (PMC: https://pmc.ncbi.nlm.nih.gov/articles/PMC11207638/)
+18. ExerSense placement-robust recognition (Sensors 2021) — https://www.mdpi.com/1424-8220/21/1/91 (arXiv: https://arxiv.org/abs/2004.10026)
+19. Complete gym-exercise detection with smartphone sensors (2020) — https://onlinelibrary.wiley.com/doi/10.1155/2020/6471438
+20. Free-weight recognition via DTW (2013) — https://link.springer.com/chapter/10.1007/978-3-642-37105-9_20
+21. CNN-ResBiGRU on MyoGym, EMG+IMU (MDPI ASI 2024) — https://www.mdpi.com/2571-5577/7/4/59
+22. Deep CNN-LSTM with self-attention for HAR (IEEE JTEHM 2022) — https://pmc.ncbi.nlm.nih.gov/articles/PMC9252338/
+23. Workout recognition + rep counting, chest CNN (IWANN 2019) — https://link.springer.com/chapter/10.1007/978-3-030-20521-8_29
+24. StrengthControl smartwatch validation, big three at the wrist (2021) — https://pmc.ncbi.nlm.nih.gov/articles/PMC8471343/
+25. Wearables vs video for exercise classification (arXiv 2307.04516) — https://arxiv.org/abs/2307.04516
+
+### Datasets (18)
+
+26. MM-Fit dataset site — https://mmfit.github.io/
+27. MM-Fit IMWUT paper — https://dl.acm.org/doi/10.1145/3432701
+28. MM-Fit starter repo — https://github.com/KDMStromback/mm-fit
+29. Microsoft RecoFit dataset repo — https://github.com/microsoft/Exercise-Recognition-from-Wearable-Sensors
+30. MyoGym via ResearchGate (access route) — https://www.researchgate.net/publication/319603676_MyoGym_introducing_an_open_gym_data_set_for_activity_recognition_collected_using_myo_armband
+31. MyoGym via Semantic Scholar (access route) — https://www.semanticscholar.org/paper/MyoGym:-introducing-an-open-gym-data-set-for-using-Koskim%C3%A4ki-Siirtola/ad12b1caf7125f4dad1035f7b412f776dfb7447f
+32. WEAR dataset site — https://mariusbock.github.io/wear/
+33. WEAR paper (arXiv) — https://arxiv.org/abs/2304.05088
+34. Velloso et al., Weight Lifting Exercises dataset paper (AH'13) — https://www.collaborative-ai.org/publications/velloso13_ah.pdf
+35. ERICA dumbbell+earable dataset (SMU) — https://researchdata.smu.edu.sg/articles/dataset/Earable_IoT_Dataset_from_ERICA_-_Enabling_real-time_mistake_detection_corrective_feedback_for_free-weights_exercises/13114661
+36. ERICA dataset repo — https://github.com/ericasensys/erica-dataset
+37. RecGym dataset site — https://zhaxidele.github.io/RecGym/
+38. RecGym on Kaggle — https://www.kaggle.com/datasets/zhaxidelebsz/10-gym-exercises-with-615-abstracted-features
+39. Gym Gesture Classification IMU dataset (IEEE DataPort) — https://ieee-dataport.org/documents/gym-gesture-classification-using-imu-sensor-dataset
+40. MEx multimodal exercise dataset (IEEE DataPort) — https://ieee-dataport.org/open-access/mex-multi-modal-exercise-dataset
+41. StrengthSense dataset (arXiv 2511.02027) — https://arxiv.org/abs/2511.02027
+42. Gym Workout IMU Dataset (Kaggle, Apple Watch SE) — https://www.kaggle.com/datasets/shakthisairam123/gym-workout-imu-dataset
+43. Awesome-IMU-Sensing curated list — https://github.com/rh20624/Awesome-IMU-Sensing
+44. Fitness Tracker accel+gyro data (Kaggle mirror) — https://www.kaggle.com/datasets/krishujeniya/fitness-tracker-accelerometer-and-gyroscope-data
+
+### Commercial products & validations (21)
+
+45. GymAware FLEX product page — https://gymaware.com/product/flex-barbell-tracker/
+46. GymAware FLEX Exercise Assist doc — https://gymaware.zendesk.com/hc/en-us/articles/6947870249743-FLEX-Exercise-Assist
+47. Enode.ai — https://enode.ai/
+48. Enode/Vmaxpro review (Sprinting Workouts) — https://sprintingworkouts.com/blogs/training-equipment/enode-vmaxpro-review
+49. Enode/Vmaxpro reliability & sensitivity study — https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11676481/
+50. Vmaxpro accuracy evaluation (PubMed 38188099) — https://pubmed.ncbi.nlm.nih.gov/38188099/
+51. PUSH Band 2.0 rep-counting validation (JMPB) — https://journals.humankinetics.com/view/journals/jmpb/6/4/article-p289.xml
+52. PUSH Band 2.0 squat validity (SAGE) — https://journals.sagepub.com/doi/10.1177/17543371211024018
+53. Bar Sensei reliability/validity (MDPI Sports) — https://www.mdpi.com/2075-4663/7/11/230
+54. VBT device placement/validity comparison (Sports 2021) — https://doi.org/10.3390/sports9090123
+55. Metric VBT app validation (PeerJ) — https://peerj.com/articles/17789/
+56. VBT devices buyers guide 2026 (VBTcoach) — https://vbtcoach.com/blog/velocity-based-training-devices-buyers-guide/
+57. Beast Sensor review (Garage Gym Reviews) — https://www.garagegymreviews.com/beast-sensor-review
+58. Output Sports drop-jump validity — https://pmc.ncbi.nlm.nih.gov/articles/PMC9620392/
+59. Apple Watch rep-counter app roundup (Riven) — https://riven.fit/blog/best-automatic-rep-counter-apps-apple-watch
+60. Whoop workout detection doc — https://www.whoop.com/us/en/thelocker/how-whoop-detects-and-labels-your-workouts-activities/
+61. Garmin forums: wrong exercise detected — https://forums.garmin.com/sports-fitness/running-multisport/f/forerunner-965/353939/strength-activity-profile-detects-the-wrong-exercise
+62. TechRadar: Garmin strength mode critique — https://www.techradar.com/features/why-garmins-strength-training-mode-needs-to-be-improved-or-scrapped
+63. AppleInsider: Atlas Wristband 2 review — https://appleinsider.com/articles/16/07/17/review-atlas-wristband-2-makes-some-improvements-but-not-enough
+64. Samsung Galaxy Watch weightlifting guide (MyHealthyApple) — https://www.myhealthyapple.com/a-complete-guide-to-weightlifting-and-strength-training-using-the-samsung-galaxy-watch/
+65. New Atlas: Moov Now review — https://newatlas.com/moov-now-sports-coach-review/41114/
+
+### ML methods (17)
+
+66. ROCKET (arXiv 1910.13051) — https://arxiv.org/abs/1910.13051
+67. MiniRocket (2021) — https://www.researchgate.net/publication/353908279_MiniRocket_A_Very_Fast_Almost_Deterministic_Transform_for_Time_Series_Classification
+68. MiniRocket on ultra-low-power MCU (ETH 2023) — https://www.research-collection.ethz.ch/server/api/core/bitstreams/b5bd8918-f595-4997-b36d-20649b13816f/content
+69. InceptionTime (arXiv 1909.04939) — https://arxiv.org/abs/1909.04939
+70. Scaling-FCN IMU fitness CNN vs classical, LOSO (2024) — https://pmc.ncbi.nlm.nih.gov/articles/PMC10857166/
+71. DTW template recognition of locomotion (2021) — https://pmc.ncbi.nlm.nih.gov/articles/PMC8067979/
+72. Few-shot rep counting for unseen exercises (arXiv 2410.00407) — https://arxiv.org/abs/2410.00407
+73. Hi-OSCAR open-set HAR (arXiv 2510.08635) — https://arxiv.org/abs/2510.08635
+74. Orientation-invariant HAR via differential quaternions (2018) — https://pmc.ncbi.nlm.nih.gov/articles/PMC6111613/
+75. Yuan et al., SSL on 700k person-days (2024) — https://pmc.ncbi.nlm.nih.gov/articles/PMC11015005/
+76. OxWearables ssl-wearables code — https://oxwearables.github.io/ssl-wearables/
+77. LIMU-BERT (SenSys 2021) — https://tanrui.github.io/pub/LIMU_BERT.pdf
+78. IMU2CLIP (arXiv 2210.14395) — https://arxiv.org/abs/2210.14395
+79. Virtual IMU data from videos for HAR (2021) — https://pmc.ncbi.nlm.nih.gov/articles/PMC8707382/
+80. On-device few-shot HAR personalization (arXiv 2508.15413) — https://arxiv.org/abs/2508.15413
+81. Cross-domain few-shot HAR (arXiv 2310.14390) — https://arxiv.org/pdf/2310.14390
+82. SSL for accelerometer HAR: survey (ACM 2024) — https://dl.acm.org/doi/10.1145/3699767
+
+### Bar kinematics & biomechanics (18)
+
+83. Snatch bar trajectory survey, Worlds/Pan-Am (2020) — https://pmc.ncbi.nlm.nih.gov/articles/PMC7552656/
+84. Back squat kinematics across loads (Frontiers 2024) — https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2024.1454309/full
+85. Intensity/fatigue effects on SBD: systematic review (2025) — https://pmc.ncbi.nlm.nih.gov/articles/PMC12521083/
+86. Load-velocity of full squat and bench (2022) — https://pmc.ncbi.nlm.nih.gov/articles/PMC9180020/
+87. Deadlift minimal velocity thresholds (2017) — https://pmc.ncbi.nlm.nih.gov/articles/PMC5968962/
+88. Flat vs incline bench load-velocity (2025) — https://pmc.ncbi.nlm.nih.gov/articles/PMC12274453/
+89. Snatch vs clean, wearable IMUs (PAAH 2024) — https://paahjournal.com/articles/10.5334/paah.306
+90. Snatch vs clean in elite lifters (J Biomech 2025) — https://www.sciencedirect.com/science/article/abs/pii/S0021929025006189
+91. Sumo vs conventional deadlift 3D analysis (2000) — https://pubmed.ncbi.nlm.nih.gov/10912892/
+92. Conventional vs Romanian deadlift (2019) — https://pubmed.ncbi.nlm.nih.gov/30662500/
+93. Front vs back squat biomechanics (2012) — https://www.researchgate.net/publication/258363730_A_biomechanical_Analysis_of_front_and_back_squat_injury_implications
+94. Overhead press variants kinetics (Sports Biomech 2021) — https://www.tandfonline.com/doi/abs/10.1080/14763141.2021.1993983
+95. Eccentric-phase duration effects (2019) — https://pubmed.ncbi.nlm.nih.gov/31418323/
+96. GymAware velocity zones — https://gymaware.com/velocity_zones/
+97. Barbell exercise classification + rep counting (Springer LNCS 2025) — https://link.springer.com/chapter/10.1007/978-981-96-7742-9_17
+98. IMU fitness recognition CNN at 100 Hz (Sensors 2024) — https://www.mdpi.com/1424-8220/24/3/742
+99. EnodePro validity, bench + squat (2025) — https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11769546/
+100. Asymmetric-load barbell squats (2024) — https://pmc.ncbi.nlm.nih.gov/articles/PMC12946874/
+101. Barbell velocity IMU systematic review (Sensors 2021) — https://pmc.ncbi.nlm.nih.gov/articles/PMC8038306/
+102. Apple Watch barbell velocity validity (2023) — https://pmc.ncbi.nlm.nih.gov/articles/PMC10383699/
+103. Paralympic bench press bar-IMU velocity validation (Sensors 2022) — https://doi.org/10.3390/s22249904
+
+### Practitioner / open source (11)
+
+104. daveebbelaar/tracking-barbell-exercises — https://github.com/daveebbelaar/tracking-barbell-exercises
+105. Veto2922 reimplementation — https://github.com/Veto2922/Fitness-tracker-based-on-ML-2
+106. OpenBarbell V3 — https://github.com/squatsandsciencelabs/OpenBarbell-V3
+107. OpenBarbell build log (Hackaday.io) — https://hackaday.io/project/3706-openbarbell
+108. Wojtek120 IMU bar velocity — https://github.com/Wojtek120/IMU-velocity-and-displacement-measurements
+109. KevinAiken/Smart-Bar — https://github.com/KevinAiken/Smart-Bar
+110. kostecky/VBT-Barbell-Tracker — https://github.com/kostecky/VBT-Barbell-Tracker
+111. bartkowiaktomasz BiLSTM fitness classification — https://github.com/bartkowiaktomasz/fitness-activity-classification-with-lstms
+112. namanarora42/DeepFit — https://github.com/namanarora42/DeepFit
+113. Android Health Services ExerciseClient docs — https://developer.android.com/health-and-fitness/health-services/active-data
+
+### Patents & IP landscape (14)
+
+114. US9174084B2, Automatic exercise segmentation and recognition (Microsoft, 2015) — https://patents.google.com/patent/US9174084B2/en
+115. US7455621B1, Free-weight exercise monitoring (expired 2025) — https://patents.google.com/patent/US7455621
+116. US20110092337A1 / US8500604B2, Bosch wearable strength-training monitor — https://patents.google.com/patent/US20110092337A1/en
+117. US20170128765A1, Smart Barbell (abandoned) — https://patents.google.com/patent/US20170128765A1/en
+118. US20170266490A1, iLift smart collar (abandoned) — https://patents.google.com/patent/US20170266490A1/en
+119. US11794074B2, Exercise type recognition, body-worn (2023) — https://patents.google.com/patent/US11794074B2/en
+120. WO2024064703A1, Peloton rep counting via video (ceased) — https://patents.google.com/patent/WO2024064703A1/en
+121. US10575760B2, GestureLogic activity recognition — https://patents.google.com/patent/US10575760B2/en
+122. US20170266494A1 / US10653918B2, Nike mobile fitness monitoring — https://patents.google.com/patent/US20170266494A1/en
+123. US20160354014A1 / US10881327B2, 3M accelerometer activity classification (expired) — https://patents.google.com/patent/US20160354014A1/en
+124. US20180021616A1 / US10661112B2, Tonal digital strength training — https://patents.google.com/patent/US20180021616A1/en
+125. US11051720B2, Apple constrained-arm fitness tracking — https://patents.google.com/patent/US11051720B2/en
+126. USD725512S1, Atlas Wearables design patent — https://patents.google.com/patent/USD725512S1/en
+127. SimpliFaster VBT buyer's guide (patent-landscape context) — https://simplifaster.com/articles/buyers-guide-velocity-based-training-systems/
+
