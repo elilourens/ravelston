@@ -228,6 +228,15 @@ The **PSTI Act 2022** has applied since **29 April 2024** and explicitly covers
 network-connectable products including *"connected fitness trackers"* over
 Bluetooth.
 
+> ⚠️ **Revised 2026-08-17 — we are probably out of scope, and it's our choice.**
+> s.5's two gateways both fail for a plain BLE peripheral: the first needs an
+> **IP-suite protocol** (BLE GATT is not IP), the second needs capability to
+> connect to **two or more products at the same time**. One link at a time to
+> one phone is outside PSTI; sequential pairing doesn't count, because the test
+> is *simultaneous*. **But BLE SoCs support concurrent links, so enabling two in
+> firmware puts us straight back in scope.** Decide it deliberately and record
+> the decision. See [[White-Label Route]] §5.
+
 Three duties: no universal default passwords; a published vulnerability
 disclosure policy; a published **minimum security update period**. Plus a
 statement of compliance with the product.
