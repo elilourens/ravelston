@@ -30,7 +30,7 @@ The wrapper runs `claude -p` with `--permission-mode acceptEdits` and pre-approv
 
 1. Works out the scope (working tree, PR, or branch diff vs `main`).
 2. Loads domain guidelines — React/Next.js changes pull in the bundled `vercel-react-best-practices` skill.
-3. Reviews for bugs, unit errors (Hz/kg/m/s² mix-ups matter in `research/`), over-engineering, symptom-fixes vs root causes, and out-of-diff problems (duplicated helpers, stale enum mirrors, incomplete flag gating).
+3. Reviews for bugs, unit errors (Hz/kg/m/s² mix-ups matter in `rnd/`), over-engineering, symptom-fixes vs root causes, and out-of-diff problems (duplicated helpers, stale enum mirrors, incomplete flag gating).
 4. Scores the change 1–10 for risk ("Scary Score") — `scratch/` is reviewed leniently, migrations and anything irreversible get a floor above 5.
 5. Recommends tests where meaningful logic lacks them.
 6. Outputs the score plus **LGTM** or findings tiered as Critical / Important / Should Fix / Testing, and posts to the PR when given one.

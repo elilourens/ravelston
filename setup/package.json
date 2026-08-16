@@ -2,7 +2,7 @@
   "name": "ravelston",
   "version": "0.1.0",
   "private": true,
-  "description": "Gym performance tracker built around two bar-end IMUs. Node tooling only — the analysis and sensor code are Python, see setup/README.md.",
+  "description": "Node tooling for Ravelston (headless screenshots). Lives in setup/ so node_modules stays out of the repo root; the Python code is unrelated - see setup/README.md.",
   "type": "module",
   "license": "UNLICENSED",
   "repository": {
@@ -10,7 +10,7 @@
     "url": "git+https://github.com/elilourens/ravelston.git"
   },
   "scripts": {
-    "shot": "node setup/screenshot.mjs"
+    "shot": "node screenshot.mjs"
   },
   "devDependencies": {
     "playwright-core": "^1.62.1"

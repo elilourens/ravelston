@@ -1,4 +1,4 @@
 # Test runner. Tests are pure-Python and run anywhere.
 #   pip install -r setup/requirements-dev.txt
-#   python -m pytest sensors/daq/tests/
+#   python -m pytest rnd/sensors/daq/tests/
 pytest>=8.0

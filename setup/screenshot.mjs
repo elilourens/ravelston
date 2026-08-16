@@ -6,6 +6,7 @@
  * package, and installing system libs needs a password. `playwright-core`
  * plus an explicit executablePath sidesteps both.
  *
+ *   npm --prefix setup run shot -- <file-or-url> [options]
  *   node setup/screenshot.mjs <file-or-url> [options]
  *
  *   --out <path>        output PNG (default: shot.png)
@@ -36,9 +37,15 @@ const flag = (name, dflt) => {
 };
 const has = (name) => argv.includes(`--${name}`);
 
+// npm runs scripts with cwd set to the package dir (setup/), so relative paths
+// would otherwise resolve against setup/ rather than wherever you typed the
+// command. INIT_CWD is where npm was actually invoked from.
+const base = process.env.INIT_CWD || process.cwd();
+const resolve = (p) => path.resolve(base, p);
+
 const input = argv[0];
-const target = /^https?:\/\//.test(input) ? input : 'file://' + path.resolve(input);
-const out = flag('out', 'shot.png');
+const target = /^https?:\/\//.test(input) ? input : 'file://' + resolve(input);
+const out = resolve(flag('out', 'shot.png'));
 const phone = has('phone');
 const width = Number(flag('width', phone ? 390 : 1180));
 const height = Number(flag('height', phone ? 844 : 900));

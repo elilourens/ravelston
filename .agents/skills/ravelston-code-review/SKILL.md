@@ -18,7 +18,7 @@ Review code changes for bugs AND unnecessary complexity. Both matter equally.
 
 - `marketing-site/` — public marketing website
 - `app/` — the companion app for the sensor hardware
-- `research/` — sensor research, signal processing, simulation experiments (mostly Python and Markdown)
+- `rnd/` — sensor acquisition, signal processing, experiments (mostly Python and Markdown)
 - `scratch/` — throwaway prototypes; review leniently — flag only outright bugs the author would want to know about, never style or structure
 - `setup/` — environment and tooling setup scripts
 
@@ -96,7 +96,7 @@ Include these as findings (CATEGORY: `testing`, SEVERITY: `important`) when warr
 
 - **New utilities, hooks, or pure functions with meaningful logic** — flag if no corresponding test.
 - **New API endpoints or service functions** — flag if added without tests.
-- **Signal-processing / estimation code in `research/` promoted into `app/`** — recommend regression tests pinning known input→output pairs from the simulation results before the code leaves research.
+- **Signal-processing / estimation code in `rnd/` promoted into `product/app/`** — recommend regression tests pinning known input→output pairs from the simulation results before the code leaves rnd.
 - **Scary score >= 7** — strongly recommend running the full relevant test suite before merging.
 - **Meaningful logic changed without corresponding test updates** — flag as `important`.
 

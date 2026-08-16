@@ -1,0 +1,12 @@
+# Tool configuration only — this repo is not a Python package, so there is no
+# [project] or [build-system] table and nothing here is installable.
+# Dependencies are declared in setup/requirements-*.txt.
+
+[tool.pytest.ini_options]
+# Keep generated state out of the repo root.
+cache_dir = ".cache/pytest"
+
+# So a bare `pytest` from the repo root finds the suite.
+testpaths = ["rnd/sensors/daq/tests"]
+
+addopts = "-q"

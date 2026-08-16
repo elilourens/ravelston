@@ -1,7 +1,7 @@
 # bar-analysis
 
 Processing for Sensor Logger exports from the phone-on-bar sessions
-(see [PHONE-PROTOCOL.md](../../research/PHONE-PROTOCOL.md)).
+(see [PHONE-PROTOCOL.md](../../kb/rnd/PHONE-PROTOCOL.md)).
 
 ## Run
 
