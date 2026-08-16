@@ -15,7 +15,7 @@ so nothing here is committed. This folder is the plan, not a record.
 
 ## The premise, stated plainly
 
-If bar-whip load estimation works (see [FINDINGS.md](../../../research/FINDINGS.md)),
+If bar-whip load estimation works (see [FINDINGS.md](../rnd/FINDINGS.md)),
 Ravelston is the only lifting tracker that knows *what you lifted* without
 being told. Everything else on the market — velocity trackers, camera
 systems, app loggers — requires the user to enter the weight. That is the
@@ -52,7 +52,7 @@ and asks to keep it.
 ### G2 — Waitlist and audience *(parallel with Stage 2)*
 
 Only once G1 has produced something worth showing. The
-[`marketing-site/`](../../../marketing-site/) exists for this. Build in public
+[`gtm/site/`](../../gtm/site/) exists for this. Build in public
 if it suits — the bar-whip physics is a genuinely interesting story and the
 strength-training internet rewards technical honesty.
 

@@ -43,5 +43,5 @@ algorithm together for exactly this reason.
   onboard logging. Everything streams over BLE, so a dropout is lost data,
   not something you can retrieve afterwards.
 
-Related: [Sensor DAQ](../../kb/tooling/Sensor%20DAQ.md) ·
-[WT9011 Setup](../../kb/tooling/WT9011%20Setup.md)
+Related: [Sensor DAQ](../../../kb/tooling/Sensor%20DAQ.md) ·
+[WT9011 Setup](../../../kb/tooling/WT9011%20Setup.md)

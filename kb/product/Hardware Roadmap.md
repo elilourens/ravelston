@@ -10,7 +10,7 @@ From two off-the-shelf test sensors to a mass-manufacturable product. Each stage
 
 Prove the core claims on a real bar with the two WitMotion WT9011DCL-BT50 units. No firmware work; just host-side logging (see `sensors/README.md`).
 
-- Collect empty-bar and loaded ring-down data in a rack; does the frequency-vs-load curve behave like the simulation in [FINDINGS.md](../../research/FINDINGS.md)?
+- Collect empty-bar and loaded ring-down data in a rack; does the frequency-vs-load curve behave like the simulation in [FINDINGS.md](../rnd/FINDINGS.md)?
 - Test ROM / rep detection / rest-time from the same streams.
 - Characterise the known weaknesses: BLE drops, no sample counters, cross-sensor sync drift.
 
@@ -28,7 +28,7 @@ Options (not yet decided):
 - **ESP32-S3 board + IMU breakout** (~$10–20) — cheapest chips, more wiring, weaker BLE stack for this use
 - **WitMotion OEM/white-label** — least work, but likely still no firmware control, which Stage 0's sync findings probably rule out
 
-Work: firmware with sample counters + synced clocks, battery, detachable mount (see [MOUNTING.md](../../research/MOUNTING.md) — shaft saddle inside the collars, not the rotating end cap), re-run Stage 0 tests on it. Parts: [[Stage 1 Shopping List]].
+Work: firmware with sample counters + synced clocks, battery, detachable mount (see [MOUNTING.md](../rnd/MOUNTING.md) — shaft saddle inside the collars, not the rotating end cap), re-run Stage 0 tests on it. Parts: [[Stage 1 Shopping List]].
 
 **Gate:** our prototype matches or beats the WitMotion data quality, and the mount survives real training sessions.
 
@@ -92,6 +92,6 @@ Needed before selling, not before:
 | 4 | $10–20k |
 | 5 | $20k+ (tooling + first run) |
 
-Stages 0–2 are affordable solo, and 3a keeps even the first sellable batch in reach. Stage 3b onward is where funding/pre-orders/grants enter the picture — which is also roughly where the [`marketing-site/`](../../marketing-site/) starts mattering.
+Stages 0–2 are affordable solo, and 3a keeps even the first sellable batch in reach. Stage 3b onward is where funding/pre-orders/grants enter the picture — which is also roughly where the [`gtm/site/`](../../gtm/site/) starts mattering.
 
 The customer-facing side runs alongside these stages rather than after them — see [[GTM Strategy]]. Its first stage (customer discovery) needs no hardware and can start now.

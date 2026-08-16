@@ -12,7 +12,7 @@ set of hypotheses to test in [[Customer Discovery]], not conclusions.
 Every lifting tracker on the market measures how the bar *moved*. You tell it
 what was on the bar. Ravelston measures what's on the bar.
 
-If the bar-whip load estimation in [FINDINGS.md](../../../research/FINDINGS.md)
+If the bar-whip load estimation in [FINDINGS.md](../rnd/FINDINGS.md)
 holds up, that is a category difference, not a feature difference — and it's
 the only defensible thing here, since ROM, rep counting, and rest timing are
 all commodity IMU features that a dozen products already do.

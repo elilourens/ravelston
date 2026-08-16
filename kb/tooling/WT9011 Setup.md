@@ -6,7 +6,7 @@ tags: [tooling, sensors, hardware, setup]
 
 How to configure the two WT9011DCL-BT50 bar-end IMUs before recording anything.
 Vendor PDFs live at **`sensors/datasheets/`** in the repo — see
-[the index there](../../sensors/datasheets/README.md) for what each one covers
+[the index there](../../rnd/sensors/datasheets/README.md) for what each one covers
 and the errata we've found in them.
 
 ## The four settings that matter
@@ -86,4 +86,4 @@ run the acceptance check:
 fraction, and inter-unit sync.
 
 Related: [[Sensor DAQ]] · [Hardware Roadmap](../product/Hardware%20Roadmap.md) ·
-[datasheets](../../sensors/datasheets/README.md)
+[datasheets](../../rnd/sensors/datasheets/README.md)

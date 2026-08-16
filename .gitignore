@@ -10,7 +10,7 @@ venv/
 
 # analysis outputs — regenerate with the scripts, don't commit
 plots/
-scratch/bar-analysis/plots/
+rnd/analysis/plots/
 
 # recorded sessions live outside the repo (see setup/README.md); if any land
 # here by accident, don't commit megabytes of CSV

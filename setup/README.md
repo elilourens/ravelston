@@ -10,7 +10,7 @@ is easier in WSL.
 |---|---|---|
 | Record from the sensors | **yes** — `bleak` | can't, no Bluetooth |
 | Check a recording (`benchcheck.py`) | yes | yes |
-| Analyse sessions (`bar-analysis/`) | — | **yes** |
+| Analyse sessions (`rnd/analysis/`) | — | **yes** |
 | Node tooling (screenshots) | — | **yes** |
 
 ## Python
@@ -53,11 +53,11 @@ shell runs without the `LD_LIBRARY_PATH` workaround that used to be needed.
 ## Command-line tools
 
 **`anydoc`** — converts PDFs and office documents to Markdown. Used for the
-vendor datasheets in [`sensors/datasheets/`](../sensors/datasheets/).
+vendor datasheets in [`rnd/sensors/datasheets/`](../rnd/sensors/datasheets/).
 
 ```bash
 npm install -g @firecrawl/anydoc
-anydoc "sensors/datasheets/WT9011DCL-BT50 Communication Protocol.pdf"
+anydoc "rnd/sensors/datasheets/WT9011DCL-BT50 Communication Protocol.pdf"
 ```
 
 Preferred over `pypdf` because it keeps word spacing intact — `pypdf` runs
