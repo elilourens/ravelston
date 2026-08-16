@@ -9,6 +9,21 @@ XIAO nodes replacing the WitMotion units. Prices checked 2026-08-12.
 
 ## Board decision
 
+> ⚠️ **Fine for Stage 1 bench work. Probably wrong for a sellable product** —
+> see [[Compliance]] §1. Two independent problems:
+>
+> 1. Its **FCC grant requires 20 cm separation from persons** and states that
+>    installation into a portable RF-exposure host needs a new application. A
+>    pod under a lifter's hands is 0–10 cm.
+> 2. Seeed publishes no accredited **EN 300 328 / EN 301 489-17 reports or EU
+>    DoC**. Without those, no evidence reuse is permitted under REDCA TGN 01 —
+>    the full test campaign costs **£14k–£44k instead of £4k–£10k**.
+>
+> Before committing to a module for the *product*, evaluate **Raytac MDBT50Q**,
+> **Fanstel BT840**, **Insight SiP ISP1807**, **u-blox ANNA-B112** or
+> **Ezurio BL654**, all of which ship complete RED files. Buying three XIAOs to
+> prototype with is still the right call today.
+
 **Seeed XIAO nRF52840 Sense**, over the other Stage 1 options:
 
 - Onboard **LSM6DS3** — the exact IMU named in the FINDINGS production path,
