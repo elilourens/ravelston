@@ -1,0 +1,241 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ravelston Mount Concept</title>
+<style>
+  :root {
+    --bg: #f6f7f8;
+    --surface: #ffffff;
+    --ink: #1c2126;
+    --muted: #5c6670;
+    --line: #d8dde2;
+    --accent: #4a80d8;
+    --accent-ink: #1a479c;
+    --accent-soft: #e8eef9;
+    --bad: #c04545;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14171a; --surface: #1d2126; --ink: #e8ebee; --muted: #9aa4ae;
+      --line: #333a41; --accent: #6d9be8; --accent-ink: #8fb3f0;
+      --accent-soft: #22304a; --bad: #e07070;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14171a; --surface: #1d2126; --ink: #e8ebee; --muted: #9aa4ae;
+    --line: #333a41; --accent: #6d9be8; --accent-ink: #8fb3f0;
+    --accent-soft: #22304a; --bad: #e07070;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto, sans-serif;
+    line-height: 1.55; margin: 0; padding: 3rem 1.25rem 5rem;
+  }
+  main { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 2.5rem; }
+  header .eyebrow { color: var(--accent-ink); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; margin: 0 0 0.6rem; }
+  h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 750; letter-spacing: -0.02em; line-height: 1.12; margin: 0 0 0.7rem; text-wrap: balance; }
+  header p { color: var(--muted); margin: 0; max-width: 62ch; }
+  h2 { font-size: 1.2rem; font-weight: 700; margin: 0 0 0.3rem; }
+  section > p { color: var(--muted); margin: 0 0 1.1rem; max-width: 66ch; }
+  section > p strong { color: var(--ink); }
+  figure { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; margin: 0; padding: 1.4rem 1.1rem 1rem; overflow-x: auto; }
+  figure svg { display: block; max-width: 100%; height: auto; margin: 0 auto; color: var(--ink); }
+  figcaption { color: var(--muted); font-size: 0.88rem; margin-top: 0.85rem; max-width: 68ch; }
+  figcaption strong { color: var(--ink); }
+  .req { display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 1.1rem 0 0; }
+  .req span { background: var(--accent-soft); color: var(--accent-ink); font-size: 0.85rem; font-weight: 600; padding: 0.35rem 0.8rem; border-radius: 999px; }
+</style>
+</head><body>
+<main>
+<header>
+  <p class="eyebrow">Ravelston · mounting concept v2</p>
+  <h1>The stretch-loop idea, drawn</h1>
+  <p>Plastic or metal, on and off in seconds, and small: the mount is one molded silicone loop and a nub, the mechanism bike lights have used for years. Nothing folds, clicks, ratchets, or can be lost.</p>
+  <div class="req">
+    <span>works on plastic</span><span>works on metal</span><span>on in ~2 s</span><span>off in ~1 s</span><span>no moving parts</span><span>small</span>
+  </div>
+</header>
+
+<section>
+  <h2>1 · The whole mechanism: stretch, hook on the nub, done</h2>
+  <p>The node is a small pebble with a <strong>silicone loop molded into one side</strong> and a <strong>nub on the other</strong>. Hold it against the bar or dumbbell head, stretch the loop over, drop it on the nub. Off is the reverse: thumb the loop off the nub and lift. That is the entire product — no lever, no buckle, no separate strap to lose.</p>
+  <figure>
+    <svg viewBox="0 0 720 300" role="img" aria-label="Two states of the mount: left, the silicone loop being stretched over the bar; right, the loop seated on the nub with the node held tight against the bar. No other parts.">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <!-- LEFT: stretching -->
+      <text x="180" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">stretch the loop over…</text>
+      <circle cx="180" cy="120" r="36" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <text x="180" y="125" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">bar / head</text>
+      <path d="M126 174 L146 142 A36 36 0 0 0 214 142 L234 174 L234 188 L126 188 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="134" y="188" width="92" height="48" rx="10" fill="var(--accent-soft)" stroke="#4a80d8" stroke-width="2"/>
+      <text x="180" y="209" text-anchor="middle" font-size="11" fill="var(--accent-ink)" font-weight="700">node</text>
+      <text x="180" y="226" text-anchor="middle" font-size="9.5" fill="currentColor" opacity="0.75">IMU + battery, ~30 g</text>
+      <!-- loop anchored left, being stretched up-right -->
+      <circle cx="138" cy="192" r="6" fill="#4a80d8"/>
+      <path d="M138 190 C 100 130, 150 44, 246 70" fill="none" stroke="#4a80d8" stroke-width="5" stroke-dasharray="8 5" opacity="0.85"/>
+      <line x1="252" y1="72" x2="286" y2="84" stroke="currentColor" stroke-width="1.6" marker-end="url(#arr)"/>
+      <text x="272" y="60" text-anchor="start" font-size="10.5" fill="currentColor" opacity="0.75">pull</text>
+      <text x="96" y="262" text-anchor="start" font-size="10.5" fill="currentColor" opacity="0.75">loop molded into the node — permanent, unlosable</text>
+      <!-- MIDDLE arrow -->
+      <line x1="330" y1="140" x2="392" y2="140" stroke="currentColor" stroke-width="1.8" marker-end="url(#arr)"/>
+      <text x="361" y="126" text-anchor="middle" font-size="11" fill="currentColor" font-weight="600">~2 s</text>
+      <!-- RIGHT: seated -->
+      <text x="540" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">…and drop it on the nub</text>
+      <circle cx="540" cy="120" r="36" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <text x="540" y="125" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">bar / head</text>
+      <path d="M486 174 L506 142 A36 36 0 0 0 574 142 L594 174 L594 188 L486 188 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="494" y="188" width="92" height="48" rx="10" fill="var(--accent-soft)" stroke="#4a80d8" stroke-width="2"/>
+      <text x="540" y="209" text-anchor="middle" font-size="11" fill="var(--accent-ink)" font-weight="700">node</text>
+      <text x="540" y="226" text-anchor="middle" font-size="9.5" fill="currentColor" opacity="0.75">saddle pressed hard into the bar</text>
+      <!-- loop seated over bar onto nub -->
+      <circle cx="498" cy="192" r="6" fill="#4a80d8"/>
+      <path d="M498 190 C 470 130, 500 60, 540 60 C 580 60, 610 130, 585 186" fill="none" stroke="#4a80d8" stroke-width="5"/>
+      <circle cx="586" cy="192" r="7" fill="none" stroke="#4a80d8" stroke-width="3"/>
+      <line x1="626" y1="192" x2="598" y2="192" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+      <text x="630" y="188" text-anchor="start" font-size="10.5" fill="var(--accent-ink)" font-weight="600">the nub</text>
+      <text x="630" y="203" text-anchor="start" font-size="10" fill="currentColor" opacity="0.75">thumb it off</text>
+      <text x="630" y="217" text-anchor="start" font-size="10" fill="currentColor" opacity="0.75">to release</text>
+      <!-- stretch note -->
+      <text x="420" y="272" text-anchor="start" font-size="10.5" fill="currentColor" opacity="0.75">one loop covers Ø25–55 mm by stretch — no size setting, ever</text>
+    </svg>
+    <figcaption><strong>Fig. 1 — The entire mechanism.</strong> Identical to a Knog bike light: molded loop, stretch, nub. Tension comes from the silicone itself, so it self-sizes to anything from a 25 mm bar to a fat dumbbell head, and there is nothing to adjust, fold, or lose. The honest trade: stretched silicone is a slightly softer coupling than a hard buckle — fine everywhere for rep/ROM tracking, and for the barbell’s whip signal the rigid saddle stays pressed on steel, with a tap-test on the bench to confirm it (plan B if it fails: hide a magnet in the saddle for barbells only — bars are always steel — and the loop stays the answer for everything plastic).</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>2 · Why this meets your requirements — same gesture on everything</h2>
+  <p>Magnets ask "is it steel?" — and plastic-shelled dumbbells answer no. Squeeze asks only "can I wrap around it?", and every barbell shaft, dumbbell head, and kettlebell horn says yes. One loop, three shapes:</p>
+  <figure>
+    <svg viewBox="0 0 760 260" role="img" aria-label="The same node strapped to three different objects: a steel barbell shaft, a rubber hex dumbbell head, and a plastic-shelled adjustable dumbbell. Same mechanism on all three regardless of material.">
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <!-- A: barbell shaft -->
+      <circle cx="140" cy="105" r="30" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <text x="140" y="110" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.75">steel Ø28</text>
+      <path d="M105 125 a42 42 0 0 1 70 0" fill="none" stroke="#4a80d8" stroke-width="4"/>
+      <path d="M94 150 L110 124 A30 30 0 0 0 170 124 L186 150 L186 163 L94 163 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="100" y="163" width="80" height="42" rx="8" fill="var(--accent-soft)" stroke="#4a80d8" stroke-width="2"/>
+      <text x="140" y="188" text-anchor="middle" font-size="10" fill="var(--accent-ink)" font-weight="700">node</text>
+      <text x="140" y="232" text-anchor="middle" font-size="11.5" fill="currentColor" font-weight="600">barbell shaft</text>
+      <text x="140" y="248" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.7">steel — whip signal lives here, saddle keeps it stiff</text>
+      <!-- B: hex head -->
+      <polygon points="380,68 411,86 411,122 380,140 349,122 349,86" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <text x="380" y="100" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.75">rubber</text>
+      <text x="380" y="113" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.75">hex head</text>
+      <path d="M345 130 a46 40 0 0 1 70 -2" fill="none" stroke="#4a80d8" stroke-width="4"/>
+      <path d="M334 158 L352 128 L408 128 L426 158 L426 170 L334 170 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="340" y="170" width="80" height="42" rx="8" fill="var(--accent-soft)" stroke="#4a80d8" stroke-width="2"/>
+      <text x="380" y="195" text-anchor="middle" font-size="10" fill="var(--accent-ink)" font-weight="700">node</text>
+      <text x="380" y="232" text-anchor="middle" font-size="11.5" fill="currentColor" font-weight="600">rubber hex dumbbell</text>
+      <text x="380" y="248" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.7">flats resist rotation; magnets barely work here</text>
+      <!-- C: plastic adjustable -->
+      <rect x="580" y="66" width="80" height="76" rx="16" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <text x="620" y="100" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.75">plastic</text>
+      <text x="620" y="113" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.75">shell</text>
+      <path d="M584 132 a44 38 0 0 1 72 -2" fill="none" stroke="#4a80d8" stroke-width="4"/>
+      <path d="M574 160 L592 130 L648 130 L666 160 L666 172 L574 172 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="580" y="172" width="80" height="42" rx="8" fill="var(--accent-soft)" stroke="#4a80d8" stroke-width="2"/>
+      <text x="620" y="197" text-anchor="middle" font-size="10" fill="var(--accent-ink)" font-weight="700">node</text>
+      <text x="620" y="232" text-anchor="middle" font-size="11.5" fill="currentColor" font-weight="600">plastic-shelled adjustable</text>
+      <text x="620" y="248" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.7">magnets: dead. squeeze: doesn't notice</text>
+      <!-- same-node arrows -->
+      <line x1="196" y1="184" x2="330" y2="190" stroke="currentColor" stroke-width="1.3" marker-end="url(#arr2)" opacity="0.6"/>
+      <line x1="430" y1="191" x2="570" y2="192" stroke="currentColor" stroke-width="1.3" marker-end="url(#arr2)" opacity="0.6"/>
+      <text x="263" y="176" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">same node</text>
+      <text x="500" y="180" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">same node</text>
+    </svg>
+    <figcaption><strong>Fig. 2 — Material-blind.</strong> Steel, rubber, plastic — the band doesn't know or care. The only requirement is a shape to wrap, and free weights are all cylinders and lumps. (Dumbbells don't carry the whip signal anyway, so the slightly softer coupling on rubber/plastic costs nothing that matters there.)</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>3 · Where it goes on a barbell (unchanged)</h2>
+  <p>The placement finding from the research still holds: clamp the <strong>smooth, non-rotating shaft just inside the collars</strong> — not the end cap, which spins with the sleeve and wrecks the gyro.</p>
+  <figure>
+    <svg viewBox="0 0 780 240" role="img" aria-label="Side view of a barbell end: node strapped to the smooth shaft between the knurl and the collar shoulder; the rotating sleeve, plates, and end cap are marked as off-limits.">
+      <defs>
+        <pattern id="knurl" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="7" stroke="currentColor" stroke-width="1" opacity="0.45"/>
+        </pattern>
+      </defs>
+      <rect x="196" y="86" width="70" height="112" rx="6" fill="var(--accent-soft)"/>
+      <rect x="30" y="110" width="170" height="24" fill="url(#knurl)" stroke="currentColor" stroke-width="1.8"/>
+      <rect x="200" y="110" width="62" height="24" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <rect x="262" y="98" width="16" height="48" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <rect x="278" y="102" width="300" height="40" rx="6" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <rect x="308" y="24" width="30" height="196" rx="6" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <rect x="346" y="36" width="26" height="172" rx="6" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <rect x="578" y="102" width="12" height="40" rx="3" fill="none" stroke="var(--bad)" stroke-width="2"/>
+      <!-- node + band on smooth zone -->
+      <path d="M208 106 a24 24 0 0 1 46 0" fill="none" stroke="#4a80d8" stroke-width="3.5"/>
+      <rect x="206" y="138" width="50" height="30" rx="6" fill="var(--accent-soft)" stroke="#4a80d8" stroke-width="2"/>
+      <text x="231" y="157" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)" font-weight="700">node</text>
+      <text x="115" y="98" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.75">knurl (hands)</text>
+      <line x1="231" y1="80" x2="231" y2="52" stroke="#4a80d8" stroke-width="1.4"/>
+      <text x="231" y="40" text-anchor="middle" font-size="11.5" fill="var(--accent-ink)" font-weight="700">smooth shaft — band here</text>
+      <text x="428" y="80" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.7">sleeve + plates rotate</text>
+      <line x1="584" y1="148" x2="584" y2="184" stroke="var(--bad)" stroke-width="1.4"/>
+      <text x="584" y="200" text-anchor="middle" font-size="11" fill="var(--bad)" font-weight="700">✕ end cap spins</text>
+      <text x="231" y="190" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.7">low profile → J-hooks + collars clear</text>
+    </svg>
+    <figcaption><strong>Fig. 3 — Barbell placement.</strong> One node per end in the highlighted zone. Everything outboard of the collar shoulder rotates with the plates; the smooth shaft is the non-rotating spot no commercial product currently uses.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>4 · Where it goes on a dumbbell</h2>
+  <p>The band wraps the <strong>head</strong> — the weight lump — never the handle. Your hands live on the handle between the heads, so the node sits entirely outside the grip. It faces outward on the end, which also keeps it off your forearm, shoulder, and thigh.</p>
+  <figure>
+    <svg viewBox="0 0 780 300" role="img" aria-label="Side view of a dumbbell: hands grip the highlighted handle in the middle; the node straps around one head with the node body on the outboard end face, clear of the grip and of the floor-contact surfaces.">
+      <defs>
+        <marker id="arr4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+        <pattern id="knurl2" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="7" stroke="currentColor" stroke-width="1" opacity="0.45"/>
+        </pattern>
+      </defs>
+      <!-- hand zone highlight -->
+      <rect x="300" y="100" width="180" height="90" rx="8" fill="var(--accent-soft)" opacity="0.55"/>
+      <!-- handle -->
+      <rect x="290" y="132" width="200" height="26" fill="url(#knurl2)" stroke="currentColor" stroke-width="1.8"/>
+      <!-- left head -->
+      <rect x="188" y="66" width="102" height="158" rx="14" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <text x="239" y="140" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">head</text>
+      <text x="239" y="155" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.6">(bare — for goblet grips)</text>
+      <!-- right head -->
+      <rect x="490" y="66" width="102" height="158" rx="14" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <text x="536" y="148" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">head</text>
+      <!-- band around right head (side view = vertical strip) -->
+      <rect x="556" y="63" width="13" height="164" rx="5" fill="var(--accent-soft)" stroke="#4a80d8" stroke-width="2"/>
+      <!-- node on outboard end face -->
+      <rect x="592" y="106" width="30" height="78" rx="8" fill="var(--accent-soft)" stroke="#4a80d8" stroke-width="2.5"/>
+      <text x="607" y="150" text-anchor="middle" font-size="10" fill="var(--accent-ink)" font-weight="700" transform="rotate(90 607 145)">node</text>
+      <!-- labels -->
+      <line x1="390" y1="94" x2="390" y2="56" stroke="#4a80d8" stroke-width="1.4"/>
+      <text x="390" y="44" text-anchor="middle" font-size="12" fill="var(--accent-ink)" font-weight="700">hands here — and only here</text>
+      <line x1="562" y1="56" x2="562" y2="34" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+      <text x="562" y="24" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)" font-weight="600">band around the head</text>
+      <line x1="628" y1="145" x2="660" y2="145" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+      <text x="664" y="136" text-anchor="start" font-size="10.5" fill="var(--accent-ink)" font-weight="600">node on the</text>
+      <text x="664" y="150" text-anchor="start" font-size="10.5" fill="var(--accent-ink)" font-weight="600">end face,</text>
+      <text x="664" y="164" text-anchor="start" font-size="10.5" fill="var(--accent-ink)" font-weight="600">facing out</text>
+      <!-- floor line + contact note -->
+      <line x1="150" y1="252" x2="680" y2="252" stroke="currentColor" stroke-width="1.4" opacity="0.5"/>
+      <line x1="239" y1="228" x2="239" y2="248" stroke="currentColor" stroke-width="1.6" marker-end="url(#arr4)" opacity="0.7"/>
+      <line x1="541" y1="228" x2="541" y2="248" stroke="currentColor" stroke-width="1.6" marker-end="url(#arr4)" opacity="0.7"/>
+      <text x="390" y="272" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">dumbbells rest and land on the head sides — the end-face node never touches the floor</text>
+      <!-- forearm clearance note -->
+      <text x="390" y="292" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">forearm, shoulder and thigh all contact the inner/side surfaces, never the outboard face</text>
+    </svg>
+    <figcaption><strong>Fig. 4 — Dumbbell placement.</strong> Node on one head only, body on the outboard flat face, band around that head's perimeter. The grip, the floor-contact surfaces, and the body-contact surfaces are all elsewhere. For the rare head-grip lifts (goblet squats), cup the bare head — or move the node to the other head in a couple of seconds.</figcaption>
+  </figure>
+</section>
+</main>
+</body></html>

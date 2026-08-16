@@ -1,0 +1,195 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ravelston Mount Options</title>
+<style>
+  :root {
+    --bg: #f6f7f8; --surface: #ffffff; --ink: #1c2126; --muted: #5c6670;
+    --line: #d8dde2; --accent: #4a80d8; --accent-ink: #1a479c;
+    --accent-soft: #e8eef9; --good: #2e7d4f; --bad: #c04545;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14171a; --surface: #1d2126; --ink: #e8ebee; --muted: #9aa4ae;
+      --line: #333a41; --accent: #6d9be8; --accent-ink: #8fb3f0;
+      --accent-soft: #22304a; --good: #5cb884; --bad: #e07070;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14171a; --surface: #1d2126; --ink: #e8ebee; --muted: #9aa4ae;
+    --line: #333a41; --accent: #6d9be8; --accent-ink: #8fb3f0;
+    --accent-soft: #22304a; --good: #5cb884; --bad: #e07070;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto, sans-serif; line-height: 1.55; margin: 0; padding: 3rem 1.25rem 5rem; }
+  main { max-width: 800px; margin: 0 auto; }
+  .eyebrow { color: var(--accent-ink); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; margin: 0 0 0.6rem; }
+  h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 750; letter-spacing: -0.02em; line-height: 1.12; margin: 0 0 0.7rem; }
+  .lede { color: var(--muted); margin: 0 0 2rem; max-width: 62ch; }
+  .lede strong { color: var(--ink); }
+  ol.opts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1rem; counter-reset: opt; }
+  ol.opts li { counter-increment: opt; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem 1.1rem 3.6rem; position: relative; }
+  ol.opts li::before { content: counter(opt); position: absolute; left: 1.05rem; top: 1.15rem; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--accent); color: var(--bg); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
+  ol.opts li.pick { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  ol.opts h3 { margin: 0 0 0.2rem; font-size: 1.02rem; font-weight: 700; }
+  ol.opts .picktag { display: inline-block; background: var(--accent); color: var(--bg); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 999px; padding: 0.15rem 0.6rem; margin-left: 0.5rem; vertical-align: 2px; }
+  ol.opts p { margin: 0 0 0.5rem; color: var(--muted); font-size: 0.92rem; }
+  ol.opts p strong { color: var(--ink); }
+  .tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.55rem; }
+  .tags span { font-size: 0.75rem; font-weight: 600; border-radius: 999px; padding: 0.14rem 0.6rem; }
+  .t-yes { background: color-mix(in srgb, var(--good) 15%, transparent); color: var(--good); }
+  .t-no { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
+  .t-info { background: var(--accent-soft); color: var(--accent-ink); }
+  .links { font-size: 0.85rem; }
+  .links a { color: var(--accent-ink); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--line); }
+  .links a:hover { border-bottom-color: var(--accent-ink); }
+  .verdict { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1rem 1.2rem; margin: 2rem 0 0; font-size: 0.95rem; }
+  .verdict p { margin: 0; }
+  h2 { font-size: 1.15rem; font-weight: 700; margin: 2.4rem 0 0.8rem; }
+  p.note { color: var(--muted); font-size: 0.9rem; max-width: 66ch; }
+</style>
+</head><body>
+<main>
+  <p class="eyebrow">Ravelston · mounting research round 2</p>
+  <h1>Ten mount options, ranked</h1>
+  <p class="lede">Requirements: <strong>works on plastic and metal · instant on/off · small and simple</strong> · bar-end mounting allowed (rotation accepted). From 188 sources across two research waves. Full analysis lives in <strong>research/MOUNTING.md</strong>; each option links to the real product it's patterned on.</p>
+
+  <ol class="opts">
+    <li class="pick">
+      <h3>Snap cap over the sleeve end<span class="picktag">recommended combo</span></h3>
+      <div class="tags"><span class="t-no">bar only</span><span class="t-yes">&lt;1 s push-click</span><span class="t-yes">no moving parts</span><span class="t-info">~$1–2/unit</span></div>
+      <p>A rigid "pen cap" that clicks over the standardized Ø50&nbsp;mm sleeve end — a full-circle snap ridge is the strongest small fastener there is. Spins with the sleeve (now fine). Patent-clear: grips the exterior, never the bore.</p>
+      <p class="links"><a href="https://www.circoinnovations.com/snap-clamps">50 mm pipe snap clamps</a> · <a href="https://www.lowes.com/pd/Unique-Bargains-7pcs-Chair-Leg-Caps-Fit-OD-50mm-2-Inch-Non-Marking-PVC-Chair-Leg-Tips-Non-Slip-Chair-Leg-Floor-Protectors-Round-Table-Covers-End-Caps-for-Furniture-Black/8045097">Ø50 slide-over caps</a></p>
+    </li>
+    <li class="pick">
+      <h3>Quick-Fist-style rubber C-clamp<span class="picktag">recommended combo</span></h3>
+      <div class="tags"><span class="t-yes">plastic ✓</span><span class="t-yes">1–2 s one-handed</span><span class="t-yes">Ø25–57 mm range</span><span class="t-info">vibration-proven product</span></div>
+      <p>One piece of molded rubber: the C flexes over the sleeve or dumbbell head, a stretch tab pulls over a knob. No lever, no hinge, no spring. The real product is sold for bolting tools to off-road trucks — 25&nbsp;lb working load. The node's own housing becomes the clamp.</p>
+      <p class="links"><a href="https://quickfist.com/quick-fist-clamp.html">Quick Fist Original</a> · <a href="https://quickfist.com/mini-quick-fist-5-8-to-1-3-8.html">Quick Fist Mini</a></p>
+    </li>
+    <li>
+      <h3>Mini spring-jaw claw</h3>
+      <div class="tags"><span class="t-yes">plastic ✓</span><span class="t-yes">~2 s squeeze</span><span class="t-yes">widest range — even Bowflex shells</span><span class="t-no">most mechanism</span></div>
+      <p>A shrunken GoPro Jaws: squeeze-open padded jaws + small locking plunger. The only single mechanism spanning sleeve rim, hex head, and a fat plastic adjustable. The consumer version is 9× too heavy — miniaturize the idea, not the product.</p>
+      <p class="links"><a href="https://gopro.com/en/us/shop/mounts-accessories/jaws/ACMPM-001.html">GoPro Jaws Flex Clamp</a> · <a href="https://www.arestool.com/products/adjustable-3-jaw-oil-filter-wrench">3-jaw oil-filter gripper</a></p>
+    </li>
+    <li>
+      <h3>Silicone stretch boot</h3>
+      <div class="tags"><span class="t-yes">round plastic heads ✓</span><span class="t-yes">2–4 s on / 1 s off</span><span class="t-no">soft coupling — whip-signal risk</span></div>
+      <p>A silicone sock stretched over the sleeve end — Ø50 slide-over caps are already a commodity. Zero hardware, spins with the sleeve. The elastomer between sensor and bar is the physics caveat; hex and Bowflex heads defeat it.</p>
+      <p class="links"><a href="https://foodhuggers.com/products/food-huggers-set-of-lids">Food Huggers stretch lids</a> · <a href="https://lovegreatfinds.com/blogs/news/best-silicone-stretch-lids-size-guide">stretch-lid size guide</a></p>
+    </li>
+    <li class="pick">
+      <h3>Split system: cheap carrier + quarter-turn puck<span class="picktag">recommended combo</span></h3>
+      <div class="tags"><span class="t-yes">plastic ✓ (via carrier)</span><span class="t-yes">~1 s node swap</span><span class="t-info">the system pattern</span></div>
+      <p>The Garmin bike-computer trick: a $1–2 passive carrier lives on (or clips to) each equipment type, and the sensor puck twists in and out in one second. The AirTag accessory industry converged on the same puck-vs-carrier split. Carriers = option 1 for barbells, option 2 for dumbbells.</p>
+      <p class="links"><a href="https://www.garmin.com/en-US/p/65215/">Garmin quarter-turn mount</a> · <a href="https://www.amazon.com/CatEye-H34-Flex-Tight-Bracket/dp/B002L2CC88">CatEye FlexTight</a></p>
+    </li>
+    <li>
+      <h3>Mini cam-lever C-collar</h3>
+      <div class="tags"><span class="t-yes">drop-proven geometry</span><span class="t-yes">~2 s</span><span class="t-no">has a lever</span><span class="t-no">bar + handles only</span></div>
+      <p>A Lock-Jaw barbell collar shrunk to ~20 mm wide with a sensor pocket. The collar industry has already proven this exact clamp survives repeated bar drops at Ø50. Stiffest option of all — but it's the lever-y design language you didn't like.</p>
+      <p class="links"><a href="https://www.amazon.com/Lock-Jaw-50mm-Olympic-Barbell-Collar/dp/B01FH1IH4C">Lock-Jaw collar</a> · <a href="https://www.maxbarbell.com/products/lock-jaw-pro-2-2-50mm-olympic-barbell-collar">Lock-Jaw Pro</a></p>
+    </li>
+    <li>
+      <h3>Magnet + Velcro One-Wrap combo</h3>
+      <div class="tags"><span class="t-yes">&lt;1 s on steel</span><span class="t-no">two different gestures</span><span class="t-no">magnet sheds under vibration</span></div>
+      <p>What OpenBarbell/Enode users do today: rubber-faced magnet for steel, velcro wrap for everything else. Works, ships, boring — but you carry two attachment modes and magnets have documented vibration failures.</p>
+      <p class="links"><a href="https://store.simplifaster.com/product/enode-vbt-sensor/">Enode Pro (magnetic)</a> · <a href="https://www.itapestore.com/velcroonewraproll">Velcro One-Wrap</a></p>
+    </li>
+    <li>
+      <h3>Knog-style stretch tail + nub</h3>
+      <div class="tags"><span class="t-yes">plastic ✓</span><span class="t-yes">~2 s</span><span class="t-no">softest of the tension family</span></div>
+      <p>The molded silicone loop-and-nub from the previous concept page. Still legitimate — just outranked by the clamps on stiffness and by the snap cap on speed.</p>
+      <p class="links"><a href="https://us.knog.com/products/big-cobber-rear-bike-light">Knog Big Cobber</a> · <a href="https://us.knog.com/products/plus-mount">Knog Plus mount</a></p>
+    </li>
+    <li>
+      <h3>Gecko dry-adhesive pad</h3>
+      <div class="tags"><span class="t-yes">smooth surfaces only</span><span class="t-no">chalk degrades it</span><span class="t-no">weak in peel under drops</span></div>
+      <p>The only "sticky" survivor: 30–40 N/cm² shear on smooth chrome or glossy plastic, stiff and residue-free. But it needs a wipe ritual, fails on textured rubber, and a drop's peel component pops it off. Niche bench-test candidate.</p>
+      <p class="links"><a href="https://www.setextechnologies.com/tapes/">Setex gecko tapes</a> · <a href="https://onrobot.com/en/products/gecko-gripper">OnRobot Gecko gripper</a></p>
+    </li>
+    <li>
+      <h3>Molded rubber twist-tail</h3>
+      <div class="tags"><span class="t-yes">plastic ✓</span><span class="t-no">5–8 s, two hands</span><span class="t-no">wire core fatigues</span></div>
+      <p>A Gear-Tie-style bendable tail molded into the node: wrap and twist. Universal but the slowest gesture here and the wire work-hardens over hundreds of cycles. Last resort.</p>
+      <p class="links"><a href="https://niteize.com/gear-tie-reusable-rubber-twist-tie">Nite Ize Gear Tie</a></p>
+    </li>
+  </ol>
+
+  <div class="verdict">
+    <p><strong>The recommendation:</strong> options 1 + 2 unified by option 5 — a quarter-turn puck node, a snap cap as its barbell carrier (push-click onto the Ø50 sleeve end), and a rubber C-clamp as its dumbbell carrier (plastic shells included). Every gesture ≤2 s, nothing folds or ratchets, one node design. Gate: the sleeve-spin bench test must confirm whip fidelity through the bearing before committing to end-mounting — if it fails, the C-clamp moves to the shaft inside the collars and everything else stands.</p>
+  </div>
+
+  <h2>Why nothing sticky made the list</h2>
+  <p class="note">Chalk dust is a granular lubricant on exactly the smooth surfaces adhesives need; texture (rubber/plastic at tens of microns) collapses gecko-class adhesion by orders of magnitude; and drop shock always finds the weak peel direction — suction cups fail it instantly and completely. Squeeze-based geometry is immune to all three. Details and 188 sources: <strong>research/MOUNTING.md</strong>.</p>
+
+  <h2>Round 3 — ten novel mechanisms (all barbell + dumbbell)</h2>
+  <p class="note">From three fresh sweeps: how other sports' sensors attach, aerospace/industrial fasteners, and everyday objects &amp; biology (68 new sources). The meta-pattern from sports tech: successful sensors <strong>occupy an existing standardized feature</strong> — and dumbbells turn out to have one (the recessed head bolt, dead-center = ideal IMU spot).</p>
+  <ol class="opts">
+    <li class="pick">
+      <h3>Spring claw with interleaving rubber teeth<span class="picktag">strongest single SKU</span></h3>
+      <div class="tags"><span class="t-yes">one-hand, &lt;1 s</span><span class="t-yes">Ø50 sleeve AND 60–180 mm heads, one part</span><span class="t-yes">any material</span></div>
+      <p>A hair claw clip crossed with a guitar trigger capo: torsion-spring jaws whose interleaving teeth self-adjust to whatever size they close around. Claw clips survive all day on a moving head; capos hold tapered necks through hours of string vibration.</p>
+      <p class="links"><a href="https://www.oreateai.com/blog/the-unseen-mechanics-what-makes-a-claw-clip-work-and-why-size-is-everything/862f2084379342aaccd843082e7b6ca4">claw clip mechanics</a> · <a href="https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/7745710">trigger capo patent</a></p>
+    </li>
+    <li class="pick">
+      <h3>Press-in dock + twist-lock node<span class="picktag">strongest system</span></h3>
+      <div class="tags"><span class="t-yes">~2 s node hop</span><span class="t-yes">dock installs once per equipment</span><span class="t-info">Sony shipped this for 100+ rackets</span></div>
+      <p>The Sony/Zepp tennis pattern: a cheap dock replaces the barbell sleeve's press-fit end plug, and presses or screws into the dumbbell's head-bolt recess; the sensor quarter-twists between docks. Zero per-session friction. (Sleeve-plug version needs a patent check vs Eleiko's in-cavity claims.)</p>
+      <p class="links"><a href="https://helpguide.sony.net/sports/tn1/v1/en/contents/TP0000599198.html">Sony adapter ring</a> · <a href="https://sensor-support.zepp.com/en/faq/2863390">Zepp insert mount</a></p>
+    </li>
+    <li>
+      <h3>Windlass strap (tourniquet mechanism)</h3>
+      <div class="tags"><span class="t-yes">any diameter, one SKU</span><span class="t-yes">huge tension, flick release</span><span class="t-info">battlefield-proven</span></div>
+      <p>Flat band + stubby twist rod that clicks into a keeper. Unlimited take-up means the same part fits a sleeve, a hex head, or a kettlebell handle. Combat tourniquets prove it works in seconds under the worst conditions imaginable.</p>
+      <p class="links"><a href="https://www.narescue.com/combat-application-tourniquet-c-a-t.html">NAR CAT tourniquet</a></p>
+    </li>
+    <li>
+      <h3>Eversion cuff over an undercut flange</h3>
+      <div class="tags"><span class="t-yes">3–5 s</span><span class="t-yes">capture, not friction</span><span class="t-info">survives full-speed bat swings</span></div>
+      <p>Blast Motion's bat-knob trick: turn a silicone lip inside-out, seat the sensor, roll the lip back so it swallows the flange. Works on the sleeve's rim step and a dumbbell's head-to-handle step.</p>
+      <p class="links"><a href="https://blast-motion.helpjuice.com/the-basics/how-do-you-get-your-attachment-sensor-on-your-bat99">Blast bat mount</a></p>
+    </li>
+    <li>
+      <h3>Instrumented "smart bolt"</h3>
+      <div class="tags"><span class="t-yes">zero per-session attach</span><span class="t-yes">dead-center = ideal IMU spot</span><span class="t-no">coverage varies by equipment</span></div>
+      <p>Garmin's golf pattern: replace an existing recessed fastener with an instrumented twin — the head screw on most fixed dumbbells, the end bolt on bolt-construction bars. Set once, forget forever.</p>
+      <p class="links"><a href="https://www8.garmin.com/manuals/webhelp/approachct10/EN-US/GUID-8EB4CBF3-1868-43F9-A502-86FEBA804008.html">Garmin CT10</a></p>
+    </li>
+    <li>
+      <h3>Garter-spring boot rim</h3>
+      <div class="tags"><span class="t-yes">push-on/pull-off</span><span class="t-yes">fixes silicone-boot creep</span><span class="t-info">lip-seal technology</span></div>
+      <p>A circular coil spring molded into a push-on boot's rim — the exact mechanism that keeps lip seals preloaded on rotating shafts for millions of revolutions. Upgrades the stretch boot from "fine for a week" to seal-grade sustained grip.</p>
+      <p class="links"><a href="https://www.acxesspring.com/garter-spring-design.html">garter spring design</a></p>
+    </li>
+    <li>
+      <h3>Rubber over-center T-hook cradle</h3>
+      <div class="tags"><span class="t-yes">one molded part</span><span class="t-yes">no lever</span><span class="t-info">engine-hood latch DNA</span></div>
+      <p>A TPU T-loop stretches 3–5 mm over a horn into a defined preloaded "hooked" state — over-center by rubber geometry alone. Hood latches prove it against engine-bay vibration and shock.</p>
+      <p class="links"><a href="https://www.austinhardware.com/rubber-hood-fastener.html">rubber hood fastener</a></p>
+    </li>
+    <li>
+      <h3>Releasable ratchet tie</h3>
+      <div class="tags"><span class="t-yes">zip-tie fast</span><span class="t-yes">250 lb strap</span><span class="t-yes">pinch-release under tension</span></div>
+      <p>SpeedyTie-style ratchet channel molded into the node, serrated strap wraps anything, 1 mm-pitch take-up, one-hand release. The cheapest credible mechanism found in any round.</p>
+      <p class="links"><a href="https://www.cableorganizer.com/products/hellermanntyton-speedytie-releasable-cable-ties">HellermannTyton SpeedyTie</a></p>
+    </li>
+    <li>
+      <h3>Remora pad (suction + micro-spinule hybrid)</h3>
+      <div class="tags"><span class="t-yes">loves rough + compliant surfaces</span><span class="t-no">highest R&amp;D cost</span><span class="t-info">Science Robotics, 340× body weight</span></div>
+      <p>The one adhesion-family survivor: lamellae suction chambers plus ~1000 carbon-fiber micro-spinules that mechanically grab surface asperities — it holds best exactly where gyms defeat plain suction and gecko.</p>
+      <p class="links"><a href="https://www.science.org/doi/10.1126/scirobotics.aan8072">remora disc paper</a></p>
+    </li>
+    <li>
+      <h3>Edge-hooking fold-over claws</h3>
+      <div class="tags"><span class="t-yes">grips an edge, not a diameter</span><span class="t-yes">size- and finish-agnostic</span></div>
+      <p>Violin shoulder-rest feet: rubber-over-steel fold-over claws that hook an edge — the sleeve-end lip, a dumbbell head's step — and hold through hours of played vibration without marking varnish.</p>
+      <p class="links"><a href="https://www.kunrest.com/your-kun/using-your-kun/">Kun shoulder rest</a> · <a href="https://patents.google.com/patent/US5419226A/en">US5419226A</a></p>
+    </li>
+  </ol>
+  <p class="note" style="margin-top:1rem">Honorable mentions that failed the barbell-AND-dumbbell filter: the cufflink T-bar twisted into the plate-hub gap (brilliant, bar-only), log-spiral climbing cams into the sleeve bore (self-tightening, but bore geometry varies + patent risk), aerospace ball-lock pins and LEGO-clutch precision as the node↔carrier docking standard, and bird-tendon micro-ridges (grip engages under load, releases when lifted) as a texture to add to any jaw face.</p>
+
+  <h2>The wildcard shelf</h2>
+  <p class="note"><strong>The "just stick it on" staircase</strong> (full write-up in research/MOUNTING.md): ① magnet-primary v1 with a strap fallback — shippable now, covers the ~90% of commercial-gym equipment that is steel; ② the <strong>tri-hybrid pad</strong> — one Ø50 mm disc combining a pot magnet (steel), a gecko-tape ring (smooth plastic), and a microspine rim (rough rubber/iron), press-and-twist to lock — nobody has built it, pairwise research precedents only, falsifiable with a $30 franken-pad test; ③ the remora pad (option 9 above) as the R&amp;D endgame.</p>
+  <p class="note">Other ideas kept alive from the creative round: a magnetorheological pad (fluid pouch that rigidizes over a magnet — conforms to any texture, then locks stiff), a self-cinching twisted-string lasso (HyperAdapt-style, firmware-released), and the sensor-as-a-change-plate. The MR pad attacks precisely the failure modes that killed adhesives.</p>
+</main>
+</body></html>
