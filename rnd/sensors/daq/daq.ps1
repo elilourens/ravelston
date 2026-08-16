@@ -36,13 +36,20 @@ foreach ($c in @(
 if (-not $py) { $py = (Get-Command python.exe -ErrorAction SilentlyContinue).Source }
 if (-not $py) { throw "No Windows Python found. Install it from python.org, then: pip install bleak" }
 
-# --- locate the repo over the WSL share --------------------------------------
+# --- locate the daq scripts --------------------------------------------------
+# Prefer the script's own directory: it survives repo moves, a different
+# username and a different distro name. The hardcoded WSL share below is only
+# a fallback for hosts where $PSScriptRoot is empty (dot-sourcing, PS 2.0).
 $daq = $null
-foreach ($d in @('Ubuntu-24.04', 'Ubuntu')) {
-    $p = "\\wsl.localhost\$d\home\eli\ravelston\sensors\daq"
-    if (Test-Path $p) { $daq = $p; break }
+if ($PSScriptRoot -and (Test-Path (Join-Path $PSScriptRoot 'logger.py'))) {
+    $daq = $PSScriptRoot
+} else {
+    foreach ($d in @('Ubuntu-24.04', 'Ubuntu')) {
+        $p = "\\wsl.localhost\$d\home\eli\ravelston\rnd\sensors\daq"
+        if (Test-Path $p) { $daq = $p; break }
+    }
 }
-if (-not $daq) { throw "Cannot reach the repo over \\wsl.localhost. Is WSL running? Try: wsl -d Ubuntu-24.04 echo ok" }
+if (-not $daq) { throw "Cannot find logger.py. Run this script from rnd\sensors\daq, or check WSL is running: wsl -d Ubuntu-24.04 echo ok" }
 
 $data = "$env:USERPROFILE\bar-data"
 $addrFile = Join-Path $data 'sensors.txt'

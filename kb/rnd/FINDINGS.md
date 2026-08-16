@@ -11,8 +11,9 @@ eight simulation experiments in this repo (`run_all`, `run_dual`,
 Research brief with citations (rounds 1–2 only; this file supersedes it):
 https://claude.ai/code/artifact/cfe73a9e-6312-4f67-b8ee-b6d1dcb7bfd6
 
-Status: research phase complete, hardware pending. Last updated 2026-08-11
-after the lift-recognition research wave (§13, Appendix B).
+Status: research phase complete, hardware pending. Last updated 2026-08-16
+after the recognition/form/data research wave (§14). §13 is **superseded in
+part** by §14.1 — read them together.
 
 ---
 
@@ -746,6 +747,100 @@ where physics runs out).
 4. Warm-up vs working set boundaries (the top real-world complaint about
    every shipping auto-logger) — velocity + load context may make this
    tractable for us where it isn't at the wrist.
+
+---
+
+## 14. Wave 7: recognition revised, form scoped, data planned
+
+*(Added 2026-08-16. Eight parallel sweeps, ~180 sources. The detail lives in
+four new notes; this section records only what **changed**.)*
+
+- [[Exercise Recognition]] — what the bar can classify, and with what model
+- [[Form Analysis]] — what technique feedback is honestly available
+- [[Kinematics Pipeline]] — the signal processing that must work first
+- [[Data Plan]] — zero to a shippable model, costed
+- [[Competitive Landscape]] — products, validation, patents (in `kb/gtm/`)
+
+### 14.1 §13 was too optimistic — a correction
+
+§13 concluded recognition was "far more tractable than the weight-estimation
+problem." That reasoned from body-worn results and assumed the bar could only do
+better. **The controlled evidence says the opposite.**
+
+Accuracy tracks how tightly the sensor couples to the segment that
+*distinguishes* the exercises. Every placement ablation costs 7–23 points as you
+move away from it, and the closest published analogue to our hardware — a
+flywheel machine's own integrated sensor, 5 exercises, 10 subjects — got
+**squat 95% but deadlift 72%, row 72%, curl 67%**, versus 87% from a single
+wrist IMU on the same exercises.
+
+Also missed in §13: **MiLift's 15-class wrist classifier is built entirely from
+the gravity vector**, because the wrist adopts a distinctive static orientation
+per exercise. A barbell is horizontal in every barbell exercise. That whole
+feature family is unavailable to us.
+
+Revised expectation, LOSO, per-set: **88–94% on 5 lifts**, 78–88% on 8–10,
+and variant-level distinctions should not ship. §13's compensating advantages
+(tiny class space, load prior, start condition, differential channels) all
+survive and are still unmeasured anywhere.
+
+### 14.2 Form analysis is much narrower than assumed
+
+The governing number: a global technique classifier with **five body-worn
+IMUs** hit 64% accuracy at **28% specificity**; personalised with **one** IMU
+hit 81/81/84. And state-of-the-art *computer vision*, full-body visibility,
+expert labels, thousands of samples, detects knee valgus at **F1 0.53**.
+
+From the bar, spinal flexion, knee valgus, elbow flare and hip-shoot-up are not
+attenuated — they are **absent**. Elbow flare is the instructive case: grip
+width generates 22–30% lateral bar force, but it is equal and opposite from the
+two hands and **cancels in the rigid-body force balance**. Only a strain-gauged
+bar sees it.
+
+What *is* available: timing (free — no integration), mean velocity, velocity
+loss (r = 0.93–0.97 vs lactate), bounce/hitch/dip transients, and **bar tilt**.
+
+### 14.3 Two hardware findings that change the build
+
+- **Clock skew between the two sensors is the highest-severity risk in the
+  system.** At 5 Hz, 50 ms of skew is **90° of modal phase** — symmetric and
+  antisymmetric modes become indistinguishable and the matrix-pencil estimator
+  returns a confident wrong answer with no visible symptom. Fix: Twist-n-Sync
+  gyro cross-correlation per set, target ≤1 ms.
+- **Mount on the shaft, not the sleeve** — reinforcing [[MOUNTING]] and
+  contradicting [[Hardware Roadmap]] Stage 1. Sleeve spin injects 2.75 m/s² of
+  centripetal acceleration during a clean and rotates the measured bending
+  direction by up to 180°. It also breaks the rigid-body constraint the dual-IMU
+  maths depends on. Free diagnostic if we do end up on sleeves: the axial gyro
+  disagreement `s(t) = ω₁·û₁ − ω₂·û₂` **is** differential slip, by definition.
+
+### 14.4 The strategic revision
+
+[[Competitive Landscape]] confirms §13.1 and sharpens it: **every device in the
+market makes the user type in the weight.** Automatic load estimation is
+unclaimed, unpatented, and impossible for a camera. Meanwhile exercise
+recognition is a graveyard — PUSH, Beast, Atlas, Bar Sensei, Onyx, Vay, Peloton
+Guide — and two of those deaths were caused *specifically* by IMU accuracy
+failing independent validation.
+
+**Load stays the wedge. Recognition is a supporting feature.** That is a change
+of emphasis from §13, not of direction.
+
+One live patent needs a real FTO opinion before the architecture is fixed:
+**US9171201B2** (Peloton, to ~2034) claims accel+gyro exercise classification
+against a stored model plus simultaneous rep counting plus form scoring, and is
+**not limited to body-worn devices**.
+
+### 14.5 What is now the binding constraint
+
+Not the physics, and not the model. **There is no public barbell-mounted IMU
+data anywhere**, essentially nothing transfers from body-worn corpora (generic
+HAR pretraining buys ~2% on a fine-grained gym target), and video→synthetic IMU
+cannot represent bar flex at all.
+
+The good news is that the collection is small and cheap: **£900–2,350 and ~290
+hours to a shippable model**, because subjects dominate reps and a pre-segmenter
+cuts labelling 5–6×. See [[Data Plan]].
 
 ---
 
