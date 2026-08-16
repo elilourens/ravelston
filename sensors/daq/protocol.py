@@ -35,12 +35,38 @@ SCALE_ACCEL = 16.0 / 32768.0 * G      # int16 -> m/s^2 (±16 g range)
 SCALE_GYRO = 2000.0 / 32768.0         # int16 -> deg/s (±2000 deg/s range)
 SCALE_ANGLE = 180.0 / 32768.0         # int16 -> deg
 
-# Output-rate register (RRATE, 0x03) values
+# Output-rate register (RRATE, 0x03) values.
+# Datasheet default is 0x06 = 10 Hz, which is useless for the whip band.
 RATE_REGISTER = 0x03
 RATE_VALUES = {
-    0.2: 0x01, 0.5: 0x02, 1: 0x03, 2: 0x04, 5: 0x05,
+    0.1: 0x01, 0.5: 0x02, 1: 0x03, 2: 0x04, 5: 0x05,
     10: 0x06, 20: 0x07, 50: 0x08, 100: 0x09, 200: 0x0B,
 }
+
+# Low-pass bandwidth register (0x1F). THE DEFAULT IS 20 Hz, and that is a trap:
+# it sits inside our 2-25 Hz whip band, so the bar's own ring-down gets filtered
+# before it ever reaches the radio. The datasheet also warns that when the
+# output rate exceeds the bandwidth you get repeated samples ("two or more
+# adjacent data are exactly the same") - 100 Hz output against a 20 Hz filter
+# is exactly that case. FINDINGS section 9 specifies 188 Hz.
+BANDWIDTH_REGISTER = 0x1F
+BANDWIDTH_VALUES = {
+    256: 0x00, 188: 0x01, 98: 0x02, 42: 0x03,
+    20: 0x04, 10: 0x05, 5: 0x06,
+}
+
+# Attitude algorithm (0x24). 9-axis uses the magnetometer, which is meaningless
+# on a steel bar with magnets glued to it; 6-axis integrates the gyro instead.
+ALGORITHM_REGISTER = 0x24
+ALGORITHM_9AXIS = 0x00
+ALGORITHM_6AXIS = 0x01
+
+# Output content (0x96). If this is ever set to 1 the module stops sending
+# acceleration and angular velocity entirely and sends displacement instead,
+# which would silently empty every channel we care about.
+OUTPUT_CONTENT_REGISTER = 0x96
+OUTPUT_ACCEL_GYRO_ANGLE = 0x00
+OUTPUT_DISPLACEMENT = 0x01
 
 
 @dataclass(frozen=True)
@@ -154,3 +180,34 @@ def set_rate_commands(rate_hz) -> list:
         write_register_command(RATE_REGISTER, value),
         save_command(),
     ]
+
+
+def set_bandwidth_commands(bandwidth_hz) -> list:
+    """Full sequence to change the low-pass bandwidth: unlock, write, save."""
+    value = BANDWIDTH_VALUES[bandwidth_hz]
+    return [
+        unlock_command(),
+        write_register_command(BANDWIDTH_REGISTER, value),
+        save_command(),
+    ]
+
+
+def set_algorithm_commands(six_axis: bool = True) -> list:
+    """Switch between the 6-axis and 9-axis attitude solutions."""
+    value = ALGORITHM_6AXIS if six_axis else ALGORITHM_9AXIS
+    return [
+        unlock_command(),
+        write_register_command(ALGORITHM_REGISTER, value),
+        save_command(),
+    ]
+
+
+def configure_commands(rate_hz=100, bandwidth_hz=188, six_axis=True) -> list:
+    """Everything the whip measurement needs, in one sequence.
+
+    Order matters only in that each write must sit between an unlock and a
+    save; the module accepts them as independent transactions.
+    """
+    return (set_rate_commands(rate_hz)
+            + set_bandwidth_commands(bandwidth_hz)
+            + set_algorithm_commands(six_axis))

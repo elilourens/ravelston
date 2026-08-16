@@ -90,7 +90,7 @@ async def scan(timeout: float = 8.0):
         print("No WitMotion devices found. Are they charged and awake?")
 
 
-async def record(addresses, rate_hz, out_dir: Path, label: str):
+async def record(addresses, rate_hz, out_dir: Path, label: str, bandwidth_hz=188):
     out_dir.mkdir(parents=True, exist_ok=True)
     recorders = {a: SensorRecorder(a, out_dir, rate_hz) for a in addresses}
     clients = []
@@ -99,11 +99,14 @@ async def record(addresses, rate_hz, out_dir: Path, label: str):
     async def connect(address: str):
         client = BleakClient(address)
         await client.connect()
-        for cmd in protocol.set_rate_commands(rate_hz):
+        # Rate AND bandwidth: the module ships with a 20 Hz low-pass that would
+        # filter the whip band away before it reaches us, and would also make
+        # a 100 Hz stream emit repeated samples. See protocol.BANDWIDTH_VALUES.
+        for cmd in protocol.configure_commands(rate_hz, bandwidth_hz):
             await client.write_gatt_char(protocol.WRITE_UUID, cmd, response=False)
             await asyncio.sleep(0.1)
         await client.start_notify(protocol.NOTIFY_UUID, recorders[address].on_notify)
-        print(f"[{address}] connected, streaming at {rate_hz} Hz")
+        print(f"[{address}] connected, {rate_hz} Hz output, {bandwidth_hz} Hz bandwidth")
         return client
 
     try:
@@ -155,6 +158,10 @@ def main():
                      help="sensor MAC/address; pass twice for both bar ends")
     rec.add_argument("--rate", type=int, default=100,
                      choices=sorted(int(r) for r in protocol.RATE_VALUES if r >= 1))
+    rec.add_argument("--bandwidth", type=int, default=188,
+                     choices=sorted(protocol.BANDWIDTH_VALUES),
+                     help="low-pass bandwidth; keep well above the whip band "
+                          "(module default of 20 Hz would filter it out)")
     rec.add_argument("--out", type=Path, required=True)
     rec.add_argument("--label", default="")
     args = parser.parse_args()
@@ -162,7 +169,8 @@ def main():
     if args.cmd == "scan":
         asyncio.run(scan())
     else:
-        asyncio.run(record(args.address, args.rate, args.out, args.label))
+        asyncio.run(record(args.address, args.rate, args.out, args.label,
+                           args.bandwidth))
 
 
 if __name__ == "__main__":

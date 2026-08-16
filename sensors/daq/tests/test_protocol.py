@@ -147,3 +147,42 @@ class TestCommands:
     def test_unknown_rate_rejected(self):
         with pytest.raises(KeyError):
             protocol.set_rate_commands(123)
+
+
+class TestConfigCommands:
+    """Byte strings checked against the worked examples in
+    'WT9011DCL-BT50 Communication Protocol.pdf' (sensors/datasheets/)."""
+
+    def test_set_bandwidth_188(self):
+        # Protocol doc 3.9, verbatim: "Example: FFAA1F0100 (set bandwidth to 188Hz)"
+        unlock, write, save = protocol.set_bandwidth_commands(188)
+        assert unlock == protocol.unlock_command()
+        assert write == bytes([0xFF, 0xAA, 0x1F, 0x01, 0x00])
+        assert save == protocol.save_command()
+
+    def test_bandwidth_default_is_the_trap(self):
+        # 0x04 is the module's factory default and sits inside the whip band.
+        _, write, _ = protocol.set_bandwidth_commands(20)
+        assert write == bytes([0xFF, 0xAA, 0x1F, 0x04, 0x00])
+
+    def test_set_six_axis(self):
+        # Protocol doc 3.8, verbatim: "Set 6-axis: FFAA240100"
+        _, write, _ = protocol.set_algorithm_commands(six_axis=True)
+        assert write == bytes([0xFF, 0xAA, 0x24, 0x01, 0x00])
+
+    def test_set_nine_axis(self):
+        _, write, _ = protocol.set_algorithm_commands(six_axis=False)
+        assert write == bytes([0xFF, 0xAA, 0x24, 0x00, 0x00])
+
+    def test_configure_is_three_unlocked_transactions(self):
+        cmds = protocol.configure_commands(100, 188, six_axis=True)
+        assert len(cmds) == 9
+        assert cmds[0::3] == [protocol.unlock_command()] * 3
+        assert cmds[2::3] == [protocol.save_command()] * 3
+        assert cmds[1] == bytes([0xFF, 0xAA, 0x03, 0x09, 0x00])   # 100 Hz
+        assert cmds[4] == bytes([0xFF, 0xAA, 0x1F, 0x01, 0x00])   # 188 Hz BW
+        assert cmds[7] == bytes([0xFF, 0xAA, 0x24, 0x01, 0x00])   # 6-axis
+
+    def test_unknown_bandwidth_rejected(self):
+        with pytest.raises(KeyError):
+            protocol.set_bandwidth_commands(77)

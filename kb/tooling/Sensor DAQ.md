@@ -19,4 +19,4 @@ Data acquisition for the two WitMotion WT9011DCL-BT50 bar-end IMUs lives at **`s
 - Protocol constants were cross-checked against the manual and two community repos, but verify on first real connection: resting sensor should show ~1 g on one axis.
 - First-use: calibrate the accelerometer via the WitMotion app (flat surface, 5 s) before trusting the data.
 
-Related: [[Code Review Skill]] · [Hardware Roadmap](../product/Hardware%20Roadmap.md)
+Related: [[WT9011 Setup]] · [[Code Review Skill]] · [Hardware Roadmap](../product/Hardware%20Roadmap.md)
