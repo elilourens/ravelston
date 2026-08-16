@@ -1,0 +1,8 @@
+# Signal processing for recorded sessions. Runs in WSL.
+#   pip install -r setup/requirements-analysis.txt
+#
+# Used by scratch/bar-analysis/*.py — modal estimation, spectra, figures.
+numpy>=1.26
+scipy>=1.11
+pandas>=2.0
+matplotlib>=3.8

@@ -1,0 +1,7 @@
+# Host-side BLE acquisition from the two WT9011DCL-BT50 sensors.
+#   pip install -r setup/requirements-daq.txt
+#
+# MUST be installed on WINDOWS, not WSL — WSL cannot see Bluetooth adapters.
+# numpy is here too so benchcheck.py can run next to the logger.
+bleak>=0.22
+numpy>=1.26

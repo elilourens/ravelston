@@ -17,4 +17,4 @@ A gym performance tracker built around two sensors that mount on either side of 
 | [`sensors/`](sensors/) | Host-side sensor code — BLE acquisition now, custom firmware later |
 | [`kb/`](kb/) | Knowledge base — shared reference docs and notes |
 | [`scratch/`](scratch/) | Throwaway prototypes and one-off explorations |
-| [`setup/`](setup/) | Environment and tooling setup |
+| [`setup/`](setup/) | Environment and tooling setup — **[dependencies and which machine needs what](setup/README.md)** |

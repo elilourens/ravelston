@@ -1,0 +1,22 @@
+# node
+node_modules/
+
+# python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# analysis outputs — regenerate with the scripts, don't commit
+plots/
+scratch/bar-analysis/plots/
+
+# recorded sessions live outside the repo (see setup/README.md); if any land
+# here by accident, don't commit megabytes of CSV
+bar-data/
+*.wplay
+
+# os
+.DS_Store
+Thumbs.db
