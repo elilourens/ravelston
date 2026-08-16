@@ -424,6 +424,20 @@ maps straight into the differenced signal. No COTS unit under $600 gives
 counter-stamped dual 200 Hz streams (Movella DOT has gold-standard sync
 but caps at 60–120 Hz).
 
+> ⚠️ **Refined 2026-08-17 — see [[Sensor Platforms]] §1.** "Sub-millisecond
+> sync" conflates two things. We do **not** need *synchronous sampling*
+> (phase-aligned sample clocks); we need a **common timebase with accurate
+> per-sample timestamps**, because both streams can be resampled onto a common
+> grid. Timestamp *inaccuracy* is what maps into the differenced signal, not
+> clock phase offset. Specify it to vendors that way — x-io's x-IMU3 disclaims
+> synchronous sampling while providing exactly the property we need.
+> Two corrections to the paragraph above: **DOT's sync is not gold-standard**
+> (1 ppm is a *drift rate* — ~1.8 ms after 30 minutes, so sub-ms holds only
+> 8–15 min per sync), and **its 60 Hz streaming cap is fixed in the BLE wire
+> protocol**, not the SDK. Xsens MTw Awinda is the real gold standard at 10 µs.
+> A COTS unit meeting the requirement does exist — QSense QSM210, &lt;60 µs at
+> 400 Hz for two sensors.
+
 ## 10. The decisive bench test (one afternoon)
 
 **Before you go**: measure and write down the bar's **collar-to-collar
