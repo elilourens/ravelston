@@ -219,7 +219,80 @@ observability problem.
 
 ---
 
-## 5. Two traps in the numbers above
+## 5. Off the barbell
+
+The intended hardware carries a magnet face for the bar and a finger loop on
+the reverse face for everything else (see [[MOUNTING]]). That extends coverage
+to cables, machines, dumbbells and bodyweight — but **not** with the same
+capabilities.
+
+### What survives, and what doesn't
+
+| | On the bar | Hand-mounted |
+|---|---|---|
+| Reps, sets, rest | ✓ | ✓ |
+| Tempo, time under tension | ✓ | ✓ |
+| ROM (relative) | ~ | ~ |
+| Velocity | ✓ | ~ |
+| Left/right asymmetry | ✓ (two nodes, one rigid body) | ✗ (two independent hands) |
+| **Load** | **✓ from whip** | **✗ — see below** |
+
+**Whip does not transfer.** Bar flex works because a ~1.3 m shaft bends
+measurably. Beam stiffness goes as 1/L³, so a ~150 mm dumbbell handle is
+roughly **1000× stiffer** and deflects by nothing a 100 Hz IMU can resolve.
+Steel dumbbell handles included — the magnet attaches, the physics doesn't.
+
+Also note the asymmetry row: on a bar the two nodes share one rigid body, which
+is what makes tilt meaningful. On two hands they are independent objects, so
+the differential measurement loses its reference.
+
+### The fallback: load–velocity profiling
+
+Bar speed falls predictably with load for a given person and lift. Learn that
+curve and you can infer load from velocity afterwards. FINDINGS §6 keeps this
+as the fallback estimator regardless of whether whip works.
+
+**Strengths:** the underlying relationship is strong — R² ≈ 0.96 for squat and
+bench velocity against %1RM — and it needs no bar flex, so it works on
+anything whose velocity you can measure.
+
+**Limits, which are large:**
+
+| Problem | Figure |
+|---|---|
+| Velocity at 1RM varies between days | CV **22.5%**, ICC 0.42 |
+| It varies hugely between people | bench 0.15–0.32 m/s, squat 0.24–0.47 m/s |
+| Deadlift predictions run low | underestimates 1RM by **9–15%** |
+| Recreational ≠ trained profiles | generalised equations don't transfer |
+
+Realistic output is **±5–15% of 1RM**, not a number in kilos. Best published
+kinematics-only precedent is ~6% relative intensity on dumbbells, per-user
+trained.
+
+**And it is circular.** Building a user's profile requires knowing the loads
+they lifted, so they must log manually first. It improves with use but cannot
+bootstrap itself the way whip can.
+
+### The product story that follows
+
+> Whip gives load for free on the barbell. Velocity profiling extends
+> approximate load to everything else, once the app knows you.
+
+Two warnings attached:
+
+1. **Hand mounting is the crowded, failed category.** It is a wrist-worn IMU by
+   another name. Garmin has been at this for eight years; Atlas died doing it;
+   the one peer-reviewed wrist system on the big three lifts got 88.4% on
+   *three* exercises. Off the bar we have no differentiator, only parity.
+2. **Breadth degrades recognition.** Accuracy runs 99% at 4 classes → 96% at 13
+   → 81% at 37, and generic pretraining bought about **2%** on a 31-exercise
+   hand-mounted gym set. "Tracks everything" is the thing that makes the
+   classifier bad. Off-bar coverage should lean on **movement patterns plus
+   user confirmation**, not on naming exercises.
+
+---
+
+## 6. Two traps in the numbers above
 
 **Bar tilt is real but must be sold carefully.** Only one study has ever
 measured barbell tilt during a lift, and its magnitudes are paywalled — get the

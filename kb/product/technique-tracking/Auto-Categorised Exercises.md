@@ -155,6 +155,32 @@ is more annoying than admitting ignorance.
 
 ---
 
+## Off the barbell
+
+The intended node carries a finger loop on its reverse face, so it also mounts
+to the hand for cables, machines and bodyweight ([[MOUNTING]]).
+
+Everything above assumes the sensor is on the bar. **Hand-mounted, none of it
+holds.** The bar's own physics — start height, floor contact, walkout, path
+shape — is what does most of the classifying, and on a hand all of it
+disappears. You are back to a wrist-worn IMU, which is the placement the whole
+§1 table shows is worst.
+
+Two numbers set expectations:
+
+- The one peer-reviewed wrist system on squat/bench/deadlift got **88.4% on
+  three exercises**, with squat at 76.5%
+- Generic pretraining transferred to a 31-exercise hand-mounted gym set bought
+  about **2%**
+
+So off-bar recognition should be **patterns plus user confirmation**, not
+automatic naming. Lean harder on the `unknown` path there than on the bar, and
+expect the per-user personalisation layer to be doing most of the work.
+
+See [[Per-Exercise Sensor Capture]] §5 for what is still measurable off the bar
+— reps, tempo, velocity — and what isn't, which includes load and left/right
+asymmetry.
+
 ## Design consequence
 
 Never present a blank exercise picker. Present a **one-tap confirmation of a

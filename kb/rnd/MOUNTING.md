@@ -58,6 +58,65 @@ tap-test any mount (resonance ≥200 Hz) before trusting whip data.
 5. Claw prototype vs Quick Fist vs snap cap head-to-head (order from
    cross-round synthesis).
 
+## Intended direction: the dual-face node (2026-08-16)
+
+Eli's concept. **Not built, not tested** — recorded here so the geometry
+argument isn't relitigated.
+
+One node, two attachment features on **opposite faces**:
+
+- **Magnet face** — barbell shaft, and steel dumbbell handles
+- **Finger loop on the reverse face** — everything else (cables, machines,
+  plastic-handled dumbbells, bodyweight)
+
+### Why opposite faces and not opposite ends
+
+The bar mount needs the *whole* magnet face. Two magnets, spread as wide as the
+case allows, both sitting on the line where the bar actually touches. Putting
+the loop on an end steals that baseline and collapses the mount back toward a
+single-point pivot — the rocking mode the wide baseline exists to kill.
+
+Opposite faces keeps both features at full size.
+
+### Bar-side geometry this implies
+
+- **Two magnets, in line along the bar's long axis** — not diagonal, not
+  side by side
+- **Both on the contact line.** A flat face on a cylinder touches along one
+  line only. On a Ø28 mm shaft, 5 mm off-centre is already a **0.9 mm air
+  gap**; 10 mm off is **4.2 mm**, and holding force collapses in the first
+  millimetre. An off-line magnet is not a second contact, it is a pivot
+- **Centred on the case mid-line**, so mass sits evenly either side. Off-centre
+  and the node tips, loading one magnet in **peel** — the weakest direction for
+  both adhesive and magnet
+- **As far apart as the case allows.** That baseline resists nodding *along*
+  the bar, which is the plane the whip happens in
+
+### Costs, unresolved
+
+- **Height.** Features on both faces makes the node thicker, which raises its
+  centre of mass away from the bar and lengthens the lever on any rocking mode
+- **Snag.** A loop proud of the top face sits where hands go on wide-grip bench
+  and low-bar squat. Needs to be flush or foldable
+- **Magnet near steel in hand mode.** Gripping a bar or a machine with a magnet
+  on the back of the hand — it will find the steel
+- **Tip mass.** Node mass at the bar end shifts the bending frequency being
+  measured. Constant and calibratable, but it must be *identical* on both nodes
+- **Knuckleduster shapes are prohibited offensive weapons in the UK.** Design
+  the loop away from that form, not just away from the name — it is a retail
+  and import problem regardless of intent
+
+### What it does not buy
+
+**Whip does not transfer off the barbell.** A dumbbell handle is ~150 mm
+between plates and stiffness goes as 1/L³, so a handle a tenth the length is
+~1000× stiffer and does not measurably flex. Off the bar, load has to come from
+velocity profiling — per-user, per-exercise, ±5–15% of 1RM. See
+[[Per-Exercise Sensor Capture]] §6.
+
+This reframes **requirement 4** above: not one mechanism spanning bars and
+dumbbells, but one node carrying two permanently-attached mechanisms.
+
 ## The "just stick it on" staircase
 
 Eli's preferred UX is slap-on adhesion. Physics taxes it (see Findings:

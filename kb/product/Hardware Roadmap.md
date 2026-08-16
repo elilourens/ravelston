@@ -28,7 +28,23 @@ Options (not yet decided):
 - **ESP32-S3 board + IMU breakout** (~$10–20) — cheapest chips, more wiring, weaker BLE stack for this use
 - **WitMotion OEM/white-label** — least work, but likely still no firmware control, which Stage 0's sync findings probably rule out
 
-Work: firmware with sample counters + synced clocks, battery, detachable mount (see [MOUNTING.md](../rnd/MOUNTING.md) — shaft saddle inside the collars, not the rotating end cap), re-run Stage 0 tests on it. Parts: [[Stage 1 Shopping List]].
+Work: firmware with sample counters + synced clocks, battery, detachable mount, re-run Stage 0 tests on it. Parts: [[Stage 1 Shopping List]].
+
+**Mount, as of 2026-08-16** — see [[MOUNTING]] "Intended direction" and
+[[Kinematics Pipeline]] §7. Two decisions have firmed up:
+
+- **On the shaft, inboard of the collars — never the rotating sleeve.** Sleeve
+  spin injects ~2.75 m/s² of centripetal acceleration during a clean and
+  rotates the measured bending direction by up to 180°. Worse, the two sleeves
+  spin independently, which breaks the rigid-body constraint the whole dual-IMU
+  method rests on. The shaft is also where the bending actually happens; the
+  sleeves sit outboard of it.
+- **Dual-face node** — magnet face for the bar and steel dumbbells, finger loop
+  on the reverse face for everything else. Two magnets in line along the bar
+  axis, on the contact line, centred on the case mid-line, spread wide.
+
+Residual risk: the shaft is inside the hand path for wide-grip bench and
+snatch, so form factor becomes the constraint rather than signal processing.
 
 **Gate:** our prototype matches or beats the WitMotion data quality, and the mount survives real training sessions.
 
