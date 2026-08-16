@@ -33,7 +33,8 @@ XIAO nodes replacing the WitMotion units. Prices checked 2026-08-12.
 | 5 | Rosin-core solder, 63/37 leaded, 0.8 mm, small spool | Amazon | ~$9 |
 | 6 | Flush cutters + fine tweezers | Amazon (often bundled) | ~$8 |
 | 7 | Neodymium disc magnets, ~10×3 mm, small pack (validation mount) | Amazon | ~$8 |
-| 8 | Kapton tape 10 mm + 3M foam mounting tape | Amazon | ~$12 |
+| 8 | Kapton tape 10 mm | Amazon | ~$6 |
+| 9 | Jubilee clips / hose clamps to fit a ~28 mm shaft | Any hardware shop | ~$5 |
 | | **Total** | | **≈ $120** |
 
 Within the roadmap's $50–100 Stage 1 estimate once the ~$45 of tools
@@ -48,9 +49,15 @@ Within the roadmap's $50–100 Stage 1 estimate once the ~$45 of tools
   and re-soldering never touches the cell. Trim/solder one lead at a time.
 - **Charging**: onboard BQ25101 charges at 50 mA by default (100 mA if
   P0.13 is driven low in firmware) — slow but safe for 250–350 mAh cells.
-- **Mount**: magnets + athletic tape on the flat bar-end face for
-  validation; defer the printed 50 mm press-fit cap to a print service
-  (JLC3DP / Craftcloud, $1–5/part) once the fit dimensions are settled —
-  no printer on hand, and press-fits take iterations.
+- **Mount (revised 2026-08-16)**: on the **shaft, inboard of the collars** —
+  not the bar-end face, which is the rotating sleeve. See [[MOUNTING]]
+  "Intended direction" and [[Kinematics Pipeline]] §7. Two magnets in line
+  along the bar axis on the contact line, or a jubilee clip for a
+  glue-free rigid mount.
+  **No foam tape, no athletic tape, no VHB, no Blu-tack** — anything soft in
+  the load path becomes a spring and you measure the mount instead of the bar.
+  That is the session-1 failure. Kapton is thin enough to be acceptable;
+  foam is not.
+  The printed 50 mm press-fit cap is retired with the bar-end concept.
 - **Skipped**: slide switch (firmware deep-sleep covers it), dedicated PD
   charger, solder station extras.
