@@ -75,12 +75,15 @@ Getting these wrong produces plausible numbers rather than obvious errors.
 ## Commands
 
 ```bash
-python -m pytest rnd/sensors/daq/tests/   # 26 tests, pure Python, run anywhere
-npm run shot -- page.html --theme both    # headless screenshot
-setup/review.sh                           # code review skill, headless
+pytest                                       # 26 tests; testpaths set in pyproject.toml
+npm --prefix setup run shot -- page.html --theme both   # headless screenshot
+setup/review.sh                              # code review skill, headless
 ```
 
-Dependencies are declared in `setup/requirements-*.txt` and `package.json`.
+Node tooling lives in `setup/`, so `node_modules` stays out of the repo root.
+Generated tool state goes to `.cache/`.
+
+Dependencies are declared in `setup/requirements-*.txt` and `setup/package.json`.
 This WSL Python is externally managed (PEP 668), so installs need a venv or
 `--break-system-packages`.
 

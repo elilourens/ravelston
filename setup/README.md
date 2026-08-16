@@ -40,15 +40,32 @@ either way.
 ## Node
 
 ```bash
-npm install          # playwright-core, for headless screenshots
-npm run shot -- page.html --out shot.png --theme both --full
+npm --prefix setup install     # playwright-core, for headless screenshots
+npm --prefix setup run shot -- page.html --out shot.png --theme both --full
 ```
+
+Node lives here rather than at the repo root so `node_modules` doesn't clutter
+it. Relative paths in the arguments resolve against wherever you ran the
+command, not against `setup/`.
 
 `setup/screenshot.mjs` drives the Chromium headless shell already cached in
 `~/.cache/ms-playwright/`. It uses `playwright-core` with an explicit
 `executablePath` rather than the full `playwright` package, because installing
 browsers and system libs on this box needs a password. As of 2026-08-16 the
 shell runs without the `LD_LIBRARY_PATH` workaround that used to be needed.
+
+## Generated files
+
+`pyproject.toml` points pytest's cache at `.cache/`, and node lives in `setup/`,
+so the repo root stays clean. Python still writes `__pycache__` next to any
+module it imports. If that bothers you, redirect it per shell:
+
+```bash
+export PYTHONPYCACHEPREFIX="$PWD/.cache/pycache"
+```
+
+Optional — it also caches the standard library under that path. Everything
+mentioned here is gitignored either way.
 
 ## Command-line tools
 

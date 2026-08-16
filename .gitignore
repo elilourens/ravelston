@@ -1,12 +1,14 @@
-# node
+# node — lives in setup/ so it stays out of the repo root
 node_modules/
 
 # python
 __pycache__/
 *.py[cod]
-.pytest_cache/
 .venv/
 venv/
+
+# generated tool state, all under one roof (see pyproject.toml)
+.cache/
 
 # analysis outputs — regenerate with the scripts, don't commit
 plots/
